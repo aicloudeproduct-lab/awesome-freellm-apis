@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<title>8 қадам — сахна</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="bg" width="1080" height="1920"></canvas>
+  <div id="world">
+    <div id="lap">
+      <div id="shadow" class="face"></div>
+      <canvas id="deck" class="face" width="1880" height="1220"></canvas>
+      <div id="spill" class="face"></div>
+      <div id="baseFront" class="face"></div>
+      <div id="baseL" class="face"></div>
+      <div id="baseR" class="face"></div>
+      <div id="lid">
+        <div id="lidGlow" class="face"></div>
+        <div id="lidBack" class="face"></div>
+        <div id="lidL" class="face"></div>
+        <div id="lidR" class="face"></div>
+        <div id="lidTop" class="face"></div>
+        <div id="lidFront" class="face">
+          <div id="cam"></div>
+          <div id="screenWrap">
+            <canvas id="screen" width="1720" height="1076"></canvas>
+            <div id="glare"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <canvas id="fx" width="1080" height="1920"></canvas>
+  <div id="text"></div>
+  <canvas id="grain" width="540" height="960"></canvas>
+</div>
+<script src="scene.js"></script>
+</body>
+</html>

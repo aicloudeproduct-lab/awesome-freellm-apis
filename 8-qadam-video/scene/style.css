@@ -1,0 +1,66 @@
+@font-face { font-family: "Inter Display"; font-weight: 700; src: local("Inter Display Bold"), url("fonts/InterDisplay-Bold.otf"); }
+@font-face { font-family: "Inter Display"; font-weight: 600; src: local("Inter Display SemiBold"), url("fonts/InterDisplay-SemiBold.otf"); }
+@font-face { font-family: "Inter"; font-weight: 400; src: local("Inter Regular"), local("Inter"), url("fonts/Inter-Regular.otf"); }
+@font-face { font-family: "Inter"; font-weight: 500; src: local("Inter Medium"), url("fonts/Inter-Medium.otf"); }
+@font-face { font-family: "Inter"; font-weight: 600; src: local("Inter SemiBold"), url("fonts/Inter-SemiBold.otf"); }
+
+:root {
+  --lime: #c8ff3e;
+  --cyan: #6fd6ff;
+  --ink: #f3f6f1;
+  --muted: #a9b4bf;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; background: #040608; overflow: hidden; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #040608; }
+#bg, #fx { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+#grain { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; opacity: 0.035; pointer-events: none; }
+
+/* ---------- 3D laptop ---------- */
+#world { position: absolute; inset: 0; perspective: 2300px; perspective-origin: 540px 880px; }
+#lap { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; }
+#lid { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; }
+.face { position: absolute; left: 0; top: 0; transform-origin: 0 0; backface-visibility: hidden; }
+
+#shadow { width: 1400px; height: 1000px; backface-visibility: visible;
+  background: radial-gradient(closest-side, rgba(0,0,0,0.85), rgba(0,0,0,0.55) 55%, rgba(0,0,0,0) 100%); }
+#deck { width: 940px; height: 610px; border-radius: 26px; }
+#spill { width: 940px; height: 610px; border-radius: 26px; pointer-events: none;
+  background: radial-gradient(120% 70% at 50% 0%, rgba(150,235,170,0.20), rgba(111,214,255,0.06) 45%, rgba(0,0,0,0) 75%); }
+#baseFront { width: 940px; height: 20px; border-radius: 0 0 14px 14px;
+  background: linear-gradient(180deg, #3a4148 0%, #1b1f23 45%, #0c0e10 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
+#baseL, #baseR { width: 610px; height: 20px; background: linear-gradient(180deg, #2a3036, #0d0f12); }
+
+#lidGlow { width: 1500px; height: 1060px; backface-visibility: visible;
+  background: radial-gradient(closest-side, rgba(200,255,62,0.22), rgba(111,214,255,0.10) 55%, rgba(0,0,0,0) 100%); }
+#lidBack { width: 900px; height: 580px; border-radius: 26px 26px 6px 6px; background: linear-gradient(160deg, #22272c, #0e1013); }
+#lidL, #lidR { width: 10px; height: 580px; background: linear-gradient(90deg, #353c43, #15181b); }
+#lidTop { width: 900px; height: 10px; background: linear-gradient(180deg, #4a535c, #1a1d21); }
+#lidFront { width: 900px; height: 580px; border-radius: 26px 26px 6px 6px; background: #050607;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.10), inset 2px 0 0 0 rgba(200,255,62,0.55), inset -2px 0 0 0 rgba(111,214,255,0.45); }
+#cam { position: absolute; left: 446px; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: #15191d; box-shadow: inset 0 0 0 1.5px #22282e; }
+#screenWrap { position: absolute; left: 20px; top: 20px; width: 860px; height: 538px; border-radius: 6px; overflow: hidden; background: #070b0e; }
+#screen { position: absolute; left: 0; top: 0; width: 860px; height: 538px; }
+#glare { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(118deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.025) 26%, rgba(255,255,255,0) 42%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.03) 100%); }
+
+/* ---------- typography ---------- */
+#text { position: absolute; inset: 0; pointer-events: none; }
+.block { position: absolute; left: 80px; width: 920px; text-align: center; visibility: hidden; }
+.mask { overflow: hidden; padding: 0.14em 0 0.22em; margin: -0.14em 0 -0.22em; }
+.inner { display: inline-block; white-space: nowrap; will-change: transform; }
+.t1 { font-family: "Inter Display", "Inter", sans-serif; font-weight: 700; font-size: 112px; line-height: 1.04; letter-spacing: -0.012em; }
+.t-intro1 { font-family: "Inter Display", "Inter", sans-serif; font-weight: 700; font-size: 84px; line-height: 1.12; letter-spacing: -0.01em; }
+.t-intro2 { font-family: "Inter Display", "Inter", sans-serif; font-weight: 700; font-size: 212px; line-height: 1.08; letter-spacing: -0.02em; }
+.t-mid { font-family: "Inter Display", "Inter", sans-serif; font-weight: 700; font-size: 100px; line-height: 1.06; letter-spacing: -0.012em; }
+.t-final { font-family: "Inter Display", "Inter", sans-serif; font-weight: 700; font-size: 140px; line-height: 1.04; letter-spacing: -0.015em; }
+
+.sub { margin-top: 18px; font-family: "Inter", sans-serif; font-weight: 400; font-size: 44px; line-height: 1.3; color: var(--muted); }
+.w { color: var(--ink); }
+.l { color: var(--lime); text-shadow: 0 0 38px rgba(200,255,62,0.30); }
+.chip { display: inline-flex; align-items: center; gap: 14px; height: 60px; padding: 0 28px; margin-bottom: 26px;
+  border-radius: 30px; border: 1.5px solid rgba(200,255,62,0.55); background: rgba(200,255,62,0.07);
+  font-family: "Inter", sans-serif; font-weight: 600; font-size: 30px; color: var(--lime); letter-spacing: 0.02em; }
+.chip i { width: 12px; height: 12px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 14px var(--lime); }
+.chip b { font-weight: 600; color: rgba(243,246,241,0.55); }

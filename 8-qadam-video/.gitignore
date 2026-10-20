@@ -1,0 +1,4 @@
+frames/
+tests/
+audio/*.wav
+out/
