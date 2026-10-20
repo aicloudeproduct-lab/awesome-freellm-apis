@@ -68,7 +68,7 @@ function layoutBlocks() {
       L.width = lineWidth(L, L.size);
     });
     let y = 0;
-    B.lines.forEach((L, i) => { if (i) y += 0.27 * B.lines[i - 1].size; y += 0.73 * L.size; L.rel = y; });
+    B.lines.forEach((L, i) => { if (i) y += 0.27 * B.lines[i - 1].size + 0.1 * L.size; y += 0.73 * L.size; L.rel = y; });
     const top = B.yc - (y + 0.04 * B.lines[B.lines.length - 1].size) / 2;
     B.top = top;
     B.lines.forEach(L => { L.base = top + L.rel; });
@@ -132,9 +132,9 @@ function setupText() {
     x: MX, yc: 790, maxW: 860, align: 'left', tin: S(k) + 0.06, tout: S(k) + 1.6, label: String(k + 1).padStart(2, '0'), accent: s.accent,
     lines: s.lines.map(l => ({ t: l.t, size: l.k ? 215 : 118, w: l.k ? 900 : 700, c: l.c, punch: l.k })),
   }));
-  defBlock('unify', { x: 1024, yc: 1030, maxW: 1762, align: 'center', tin: 19.55, tout: 21.48, lines: [
+  defBlock('unify', { x: 1024, yc: 1030, maxW: 1720, align: 'center', tin: 19.55, tout: 21.48, lines: [
     { t: 'ҮЛКЕН ӨЗГЕРІС —', size: 150, w: 900, c: 'fg' }, { t: 'ШАҒЫН ӘРЕКЕТТЕН', size: 178, w: 900, c: 'lime', punch: 1 }] });
-  defBlock('final', { x: 1024, yc: 700, maxW: 1762, align: 'center', tin: 22.15, tout: 99, lines: [
+  defBlock('final', { x: 1024, yc: 700, maxW: 1720, align: 'center', tin: 22.15, tout: 99, lines: [
     { t: 'БҮГІН', size: 310, w: 900, c: 'fg', punch: 1 },
     { t: 'БІР ҚАДАМ ЖАСА', size: 205, w: 900, parts: [{ t: 'БІР ', c: 'fg' }, { t: 'ҚАДАМ', c: 'violet' }, { t: ' ЖАСА', c: 'fg' }] }] });
   layoutBlocks();
@@ -242,7 +242,7 @@ function drawS1(t) {
       g.fillStyle = COL.lime; g.beginPath(); g.moveTo(-6, 0); g.lineTo(-34, -18); g.lineTo(-34, 18); g.closePath(); g.fill(); g.restore();
     }
   });
-  if (t > 4.74) { const rw = 1730 * Math.sqrt(eio(range(t, 4.74, 5.22))); g.strokeStyle = COL.lime; g.lineWidth = 14; circle(g, VX, VY, rw); g.stroke(); }
+  if (t > 4.68) { const rw = 1730 * Math.sqrt(wipeE(range(t, 4.68, 5.26))); g.strokeStyle = COL.lime; g.lineWidth = 14; circle(g, VX, VY, rw); g.stroke(); }
   drawBlock('s0', t, COL.cream);
 }
 
@@ -586,21 +586,25 @@ const SCENES = [
   { t0: 19, bg: 'black', draw: drawUnify }, { t0: 22, bg: 'cream', draw: drawFinal },
 ];
 const circ = (x, y, r) => { g.beginPath(); g.arc(x, y, Math.max(0, r), 0, TAU); };
+const wipeE = p => 0.45 * p + 0.55 * eio(p);   // жылдамдығы біркелкірек: бір кадрда экранның аз бөлігі ауысады
 const WIPES = [
   null,
   { w0: 2.6, w1: 3.05, path: null },
-  { w0: 4.74, w1: 5.22, path: t => circ(VX, VY, 1730 * Math.sqrt(eio(range(t, 4.74, 5.22)))) },
-  { w0: 6.7, w1: 7.18, path: t => circ(VX, VY, lerp(36, 1730, Math.sqrt(eio(range(t, 6.7, 7.18))))) },
-  { w0: 8.76, w1: 9.2, path: t => { const e = lerp(-200, 2250, eio(range(t, 8.76, 9.2))); g.beginPath(); g.moveTo(-300, 0); g.lineTo(e + 140, 0); g.lineTo(e - 140, H); g.lineTo(-300, H); g.closePath(); } },
-  { w0: 10.74, w1: 11.2, path: t => { const e = lerp(-260, 1800, eio(range(t, 10.74, 11.2))); g.beginPath(); g.moveTo(0, -10); g.lineTo(W, -10); g.lineTo(W, e); g.quadraticCurveTo(W / 2, e + 220, 0, e); g.closePath(); } },
-  { w0: 12.72, w1: 13.2, path: t => { const e = lerp(2500, -560, eio(range(t, 12.72, 13.2))); g.beginPath(); g.moveTo(e + 230, 0); g.lineTo(W + 10, 0); g.lineTo(W + 10, H); g.lineTo(e - 230, H); g.closePath(); },
-    after: t => { const p = range(t, 12.72, 13.2); if (p <= 0 || p >= 1) return; const e = lerp(2500, -560, eio(p)); g.save(); g.beginPath(); g.moveTo(e + 230, 0); g.lineTo(e - 230, H); g.lineTo(e - 140, H); g.lineTo(e + 320, 0); g.closePath(); const gr = g.createLinearGradient(e, 0, e + 110, -40); gr.addColorStop(0, 'rgba(16,16,16,0.28)'); gr.addColorStop(1, 'rgba(16,16,16,0)'); g.fillStyle = gr; g.fill(); g.restore(); } },
-  { w0: 14.72, w1: 15.22, path: t => { g.beginPath(); for (let i = 0; i < 8; i++) { const p = eio(range(t, 14.72 + i * 0.025, 15.0 + i * 0.025)), y = i * H / 8; g.rect(W - W * p, y, W * p + 1, H / 8 + 1); } } },
-  { w0: 16.72, w1: 17.2, path: t => { const E = lerp(-300, W + H + 300, eio(range(t, 16.72, 17.2))); g.beginPath(); g.moveTo(0, H); g.lineTo(0, H - E); g.lineTo(E, H); g.closePath(); },
-    after: t => { const p = range(t, 16.72, 17.2); if (p <= 0 || p >= 1) return; const E = lerp(-300, W + H + 300, eio(p)); g.fillStyle = COL.violet; g.beginPath(); g.moveTo(0, H - E); g.lineTo(E, H); g.lineTo(E + 120, H); g.lineTo(0, H - E - 120); g.closePath(); g.fill(); } },
-  { w0: 18.7, w1: 19.2, path: t => circ(TGT8[0], TGT8[1], 2240 * Math.sqrt(eio(range(t, 18.7, 19.2)))) },
-  { w0: 21.7, w1: 22.14, path: t => circ(1024, 640, lerp(22, 1410, Math.sqrt(eio(range(t, 21.7, 22.14))))) },
+  { w0: 4.68, w1: 5.26, path: t => circ(VX, VY, 1730 * Math.sqrt(wipeE(range(t, 4.68, 5.26)))) },
+  { w0: 6.66, w1: 7.24, path: t => circ(VX, VY, lerp(36, 1730, Math.sqrt(wipeE(range(t, 6.66, 7.24))))) },
+  { w0: 8.72, w1: 9.3, path: t => { const e = lerp(-160, 2210, wipeE(range(t, 8.72, 9.3))); g.beginPath(); g.moveTo(-300, 0); g.lineTo(e + 140, 0); g.lineTo(e - 140, H); g.lineTo(-300, H); g.closePath(); } },
+  { w0: 10.68, w1: 11.26, path: t => { const e = lerp(-240, 1560, wipeE(range(t, 10.68, 11.26))); g.beginPath(); g.moveTo(0, -10); g.lineTo(W, -10); g.lineTo(W, e); g.quadraticCurveTo(W / 2, e + 220, 0, e); g.closePath(); } },
+  { w0: 12.68, w1: 13.26, path: t => { const e = pageEdge(t); g.beginPath(); g.moveTo(e + 230, 0); g.lineTo(W + 10, 0); g.lineTo(W + 10, H); g.lineTo(e - 230, H); g.closePath(); },
+    after: t => { const p = range(t, 12.68, 13.26); if (p <= 0 || p >= 1) return; const e = pageEdge(t); g.save(); g.beginPath(); g.moveTo(e + 230, 0); g.lineTo(e - 230, H); g.lineTo(e - 140, H); g.lineTo(e + 320, 0); g.closePath(); const gr = g.createLinearGradient(e, 0, e + 110, -40); gr.addColorStop(0, 'rgba(16,16,16,0.28)'); gr.addColorStop(1, 'rgba(16,16,16,0)'); g.fillStyle = gr; g.fill(); g.restore(); } },
+  { w0: 14.7, w1: 15.3, path: t => { g.beginPath(); for (let i = 0; i < 8; i++) { const p = wipeE(range(t, 14.7 + i * 0.035, 15.05 + i * 0.035)), y = i * H / 8; g.rect(W - W * p, y, W * p + 1, H / 8 + 1); } } },
+  { w0: 16.66, w1: 17.26, path: t => { const E = diagEdge(t); g.beginPath(); g.moveTo(0, H); g.lineTo(0, H - E); g.lineTo(E, H); g.closePath(); },
+    after: t => { const p = range(t, 16.66, 17.26); if (p <= 0 || p >= 1) return; const E = diagEdge(t); g.fillStyle = COL.violet; g.beginPath(); g.moveTo(0, H - E); g.lineTo(E, H); g.lineTo(E + 120, H); g.lineTo(0, H - E - 120); g.closePath(); g.fill(); } },
+  { w0: 18.66, w1: 19.24, path: t => circ(TGT8[0], TGT8[1], 2240 * Math.sqrt(wipeE(range(t, 18.66, 19.24)))) },
+  { w0: 21.66, w1: 22.2, path: t => circ(1024, 640, lerp(22, 1410, Math.sqrt(wipeE(range(t, 21.66, 22.2))))) },
 ];
+function pageEdge(t) { return lerp(2330, -480, wipeE(range(t, 12.68, 13.26))); }
+// диагональ: үшбұрыш ауданы E² бойынша өседі, сондықтан E = √(прогресс) — аудан біркелкі өседі
+function diagEdge(t) { const p = wipeE(range(t, 16.66, 17.26)); return Math.sqrt(p) * (W + H + 140); }
 function drawScene(i, t, withBg) { if (withBg) background(SCENES[i].bg, t); SCENES[i].draw(t); }
 function renderFrame(t) {
   t = clamp(t, 0, DUR);

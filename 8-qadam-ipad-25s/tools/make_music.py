@@ -28,6 +28,9 @@ def add(sig, start, gain=1.0, pan=0.0, duck=False):
     if i0 < 0:
         sig = sig[-i0:]; i0 = 0
     sig = sig[: N - i0] * gain
+    nf = min(len(sig), 240)                 # 5 мс сөну: үзілген дыбыстың шертпесін болдырмайды
+    sig = sig.copy(); sig[-nf:] *= np.linspace(1, 0, nf)
+    na = min(len(sig), 72); sig[:na] *= np.linspace(0, 1, na)   # 1,5 мс өсу
     if duck:
         sig = sig * side[i0:i0 + len(sig)]
     L[i0:i0 + len(sig)] += sig * np.sqrt(0.5 * (1 - pan))
