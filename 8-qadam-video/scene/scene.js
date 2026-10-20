@@ -175,7 +175,7 @@ function addBlock(o) {
     el.appendChild(chip);
   }
   const lines = o.lines.map(l => {
-    const m = document.createElement('div'); m.className = 'mask';
+    const m = document.createElement('div'); m.className = / l\b/.test(' ' + l.cls) ? 'mask glow' : 'mask';
     const i = document.createElement('div'); i.className = 'inner ' + l.cls; i.textContent = l.text;
     m.appendChild(i); el.appendChild(m); return i;
   });
