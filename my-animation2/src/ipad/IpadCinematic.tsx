@@ -34,6 +34,7 @@ const Defs: React.FC<{w: Weather; gy: number; t: number}> = ({w, gy, t}) => (
     <linearGradient id="woodGradDoor" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#ddd5c2" /><stop offset="1" stopColor="#c9c0aa" /></linearGradient>
     <linearGradient id="woodGradGable" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#d9d0bc" /><stop offset="1" stopColor="#cbc1aa" /></linearGradient>
     <radialGradient id="windowWarm" cx="0.5" cy="0.6" r="0.75"><stop offset="0" stopColor={PAL.amberSoft} /><stop offset="0.6" stopColor={PAL.amber} /><stop offset="1" stopColor={PAL.amberDeep} /></radialGradient>
+    <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#3a3e46" /><stop offset="0.55" stopColor="#16181c" /><stop offset="1" stopColor="#202329" /></linearGradient>
     <linearGradient id="interiorGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#e9a64f" /><stop offset="0.7" stopColor={PAL.amberSoft} /><stop offset="1" stopColor="#b8702e" /></linearGradient>
     <radialGradient id="warmHalo"><stop offset="0" stopColor={PAL.amber} stopOpacity="0.5" /><stop offset="0.4" stopColor={PAL.amber} stopOpacity="0.14" /><stop offset="1" stopColor={PAL.amber} stopOpacity="0" /></radialGradient>
     <linearGradient id="deskGlow" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#f2f3f5" /><stop offset="1" stopColor="#b9bcc2" /></linearGradient>

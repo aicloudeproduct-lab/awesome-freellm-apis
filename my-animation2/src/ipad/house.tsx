@@ -64,7 +64,9 @@ export const WindowUnit: React.FC<{warm: number; moon: number; inside?: React.Re
     <g>
       <rect x={gx} y={gy} width={gw} height={gh} fill="#111317" />
       <rect x={gx} y={gy} width={gw} height={gh} fill="url(#windowWarm)" opacity={warm} />
-      <path d={`M${gx + gw * 0.15},${gy + gh} L${gx + gw * 0.55},${gy}`} stroke="#d8dce3" strokeWidth={10} opacity={0.06 * moon * (1 - warm)} />
+      <rect x={gx} y={gy} width={gw} height={gh} fill="url(#glassSheen)" opacity={(0.5 + 0.5 * moon) * (1 - warm)} />
+      <path d={`M${gx + gw * 0.12},${gy + gh} L${gx + gw * 0.52},${gy}`} stroke="#d8dce3" strokeWidth={12} opacity={0.12 * moon * (1 - warm)} />
+      <path d={`M${gx + gw * 0.42},${gy + gh} L${gx + gw * 0.7},${gy}`} stroke="#d8dce3" strokeWidth={4} opacity={0.09 * moon * (1 - warm)} />
       <g clipPath="url(#winClip)">{inside}</g>
       <Plank x={w.x} y={w.y} w={w.w} h={t} seed={901} nails={false} />
       <Plank x={w.x} y={w.y + w.h - t} w={w.w + 8} h={t + 2} seed={902} nails={false} />

@@ -138,6 +138,7 @@ export const PlanSketch: React.FC<{t: number}> = ({t}) => {
   if (c.mode === 'erase') fade = 1 - range(t, c.gone[0], c.gone[1]);
   if (c.mode === 'crumple') { const f = range(t, c.gone[0], c.gone[1]); fade = 1 - f; scale = 1 - 0.85 * eo(f); }
   const appear = range(t, c.draw[0] - 0.4, c.draw[0]);
+  fade *= 1 - range(t, 23.8, 24.6); // финал: артық бөлшектер жоғалады, мәтінге орын қалады
   const cx = SKETCH.w / 2, cy = SKETCH.h / 2;
   return (
     <g transform={`translate(${SKETCH.x},${SKETCH.y})`} opacity={clamp(fade) * (0.25 + 0.75 * appear)}>
