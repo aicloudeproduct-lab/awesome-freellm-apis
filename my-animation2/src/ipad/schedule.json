@@ -1,0 +1,31 @@
+{
+  "_comment": "Құрылыс кестесі B кейіпкерінің өз сағатымен (tau, секунд). Уақыт 6.8–12.3 с аралығында жылдамдайды (timelapse). Бұл файлды tools/make_audio.py да оқиды.",
+  "speed": { "S": 3.2, "upStart": 6.8, "upEnd": 7.6, "downStart": 11.6, "downEnd": 12.3 },
+  "pieces": [
+    { "id": "sill1", "kind": "sill", "reach": 2.5, "pick": 2.85, "lifted": 3.35, "place": 3.85, "release": 3.95 },
+    { "id": "sill2", "kind": "sill", "reach": 4.3, "pick": 4.65, "lifted": 5.15, "place": 5.65, "release": 5.75 },
+    { "id": "row0", "kind": "row", "row": 0, "reach": 6.0, "pick": 6.25, "lifted": 6.6, "place": 6.95, "release": 7.05 },
+    { "id": "row1", "kind": "row", "row": 1, "reach": 7.25, "pick": 7.5, "lifted": 7.85, "place": 8.2, "release": 8.3 },
+    { "id": "row2", "kind": "row", "row": 2, "reach": 8.5, "pick": 8.75, "lifted": 9.1, "place": 9.45, "release": 9.55 },
+    { "id": "row3", "kind": "row", "row": 3, "reach": 9.75, "pick": 10.0, "lifted": 10.35, "place": 10.7, "release": 10.8 },
+    { "id": "row4", "kind": "row", "row": 4, "reach": 11.0, "pick": 11.25, "lifted": 11.6, "place": 11.95, "release": 12.05 },
+    { "id": "row5", "kind": "row", "row": 5, "reach": 12.25, "pick": 12.5, "lifted": 12.85, "place": 13.2, "release": 13.3 },
+    { "id": "door", "kind": "door", "reach": 13.5, "pick": 13.75, "lifted": 14.1, "arrive": 14.6, "place": 14.95, "release": 15.05 },
+    { "id": "window", "kind": "window", "reach": 15.65, "pick": 15.9, "lifted": 16.25, "arrive": 16.75, "place": 17.1, "release": 17.2 },
+    { "id": "roofL", "kind": "roofL", "reach": 17.8, "pick": 18.05, "lifted": 18.4, "arrive": 18.9, "seat": 19.25, "place": 19.7, "release": 19.8 },
+    { "id": "roofR", "kind": "roofR", "reach": 20.4, "pick": 20.65, "lifted": 21.0, "arrive": 21.5, "seat": 21.85, "place": 22.3, "release": 22.4 }
+  ],
+  "bWalk": [
+    [0, 1640], [14.1, 1640], [14.6, 1545], [15.1, 1545], [15.6, 1640],
+    [16.25, 1640], [16.75, 1740], [17.25, 1740], [17.75, 1640],
+    [18.4, 1640], [18.9, 1555], [19.85, 1555], [20.35, 1640],
+    [21.0, 1640], [21.5, 1765], [22.45, 1765], [22.95, 1640]
+  ],
+  "events": {
+    "doorReach": 17.55, "doorOpen": 17.8, "doorOpened": 18.4, "turn": 18.3, "stepIn": 18.6, "inside": 19.3,
+    "doorAjar": 19.6, "warmStart": 16.0, "warmFull": 17.2, "takbir": 20.1, "fold": 20.9, "ruku": 22.4, "rise": 23.6,
+    "crumple1": 4.35, "toss1": 4.75, "land1": 5.25, "crumple2": 14.45, "toss2": 14.85, "land2": 15.35,
+    "rainStart": 12.6, "rainFull": 15.5, "rainFadeStart": 24.0, "rainEnd": 26.2,
+    "text1": 24.0, "text2": 24.95, "fadeOut": 26.45
+  }
+}
