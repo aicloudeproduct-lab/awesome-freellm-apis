@@ -87,5 +87,5 @@ export function clothMaterial(color = '#EEE7DA', seed = 11) {
   normalMap.repeat.set(10, 10);
   return new THREE.MeshPhysicalMaterial({color, roughness: 0.82, sheen: 0.6, sheenRoughness: 0.55, sheenColor: new THREE.Color('#fff4e2'), normalMap, normalScale: new THREE.Vector2(0.35, 0.35), envMapIntensity: 0.5});
 }
-export const skinMaterial = () => new THREE.MeshPhysicalMaterial({color: '#E9DCC6', roughness: 0.55, sheen: 0.25, sheenColor: new THREE.Color('#ffe9cf'), clearcoat: 0.05, envMapIntensity: 0.55});
+export const skinMaterial = () => new THREE.MeshPhysicalMaterial({color: '#DCCBB2', roughness: 0.55, sheen: 0.25, sheenColor: new THREE.Color('#ffe9cf'), clearcoat: 0.05, envMapIntensity: 0.55});
 export const metalMaterial = (color = '#5b5f66') => new THREE.MeshStandardMaterial({color, metalness: 0.9, roughness: 0.38, envMapIntensity: 1.0});

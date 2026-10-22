@@ -22,15 +22,15 @@ const browser = await pw.chromium.launch({args: ['--use-angle=swiftshader', '--e
 const page = await browser.newPage({viewport: {width: Math.round(2048 * scale), height: Math.round(1536 * scale)}, deviceScaleFactor: 1});
 page.on('pageerror', e => console.error('PAGE ERROR', e.message));
 page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') console.error('console:', m.text()); });
-await page.goto(`http://127.0.0.1:${port}/scene/index.html?scale=${scale}`);
+await page.goto(`http://127.0.0.1:${port}/scene/index.html?scale=${scale}&ao=${arg('ao', '2')}`);
 await page.evaluate(() => window.__ready);
-const shots = (arg('shot', 'opening')).split(','), ts = (arg('t', '5')).split(',').map(Number), outs = (arg('out', 'tests/frame.png')).split(',');
-if (scale !== 1) await page.addStyleTag({content: `#title{transform:scale(${scale});transform-origin:top center}`});
-for (let i = 0; i < shots.length; i++) {
+const ts = (arg('t', '5')).split(',').map(Number), outs = (arg('out', '')).split(',');
+for (let i = 0; i < ts.length; i++) {
   const t0 = Date.now();
-  await page.evaluate(([t, s]) => window.renderFrame(t, s), [ts[i] ?? ts[0], shots[i]]);
-  fs.mkdirSync(path.dirname(path.join(ROOT, outs[i])), {recursive: true});
-  await page.screenshot({path: path.join(ROOT, outs[i]), clip: {x: 0, y: 0, width: Math.round(2048 * scale), height: Math.round(1536 * scale)}});
-  console.log('ok', shots[i], outs[i], (Date.now() - t0) + ' ms');
+  const name = await page.evaluate(t => window.renderFrame(t), ts[i]);
+  const out = outs[i] || `tests/t_${ts[i].toFixed(2).padStart(5, '0')}.png`;
+  fs.mkdirSync(path.dirname(path.join(ROOT, out)), {recursive: true});
+  await page.screenshot({path: path.join(ROOT, out), clip: {x: 0, y: 0, width: Math.round(2048 * scale), height: Math.round(1536 * scale)}});
+  console.log('ok', ts[i], name, out, (Date.now() - t0) + ' ms');
 }
 await browser.close(); server.close();

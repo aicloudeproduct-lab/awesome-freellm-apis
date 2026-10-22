@@ -70,7 +70,7 @@ export function buildWorld(scene) {
     }
   }
   // жолдар арасындағы жіңішке металл із
-  const groove = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.012, PATH.z0 - PATH.z1), metalMaterial('#6b6f76'));
+  const groove = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.008, PATH.z0 - PATH.z1), metalMaterial('#3f4247'));
   groove.position.set(0, 0.006, (PATH.z0 + PATH.z1) / 2); groove.receiveShadow = true; scene.add(groove); W.groove = groove;
 
   // монументалды бағаналар
@@ -125,14 +125,35 @@ export function buildSteps(scene, x, z0, seed) {
   return blocks;
 }
 
-/** Алыстағы жылы отбасы силуэттері: жарықтанған есік ойығы және үш тұлға (ересек екеу, бала). */
-export function buildFamily(scene, pos) {
+/** Тас баспана: қалың қабырғалар, жылы есік ойығы, ішкі жарық. */
+export function buildDwelling(scene, pos) {
   const g = new THREE.Group(); g.position.copy(pos);
-  const glow = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 3.6), new THREE.MeshBasicMaterial({color: '#e8b56a', transparent: true, opacity: 0.9}));
-  glow.position.set(0, 1.8, -0.05); g.add(glow);
-  const sil = new THREE.MeshBasicMaterial({color: '#1a1714'});
-  const person = (h, x) => { const p = new THREE.Group(); const b = new THREE.Mesh(new THREE.CapsuleGeometry(0.16 * h, 0.9 * h, 6, 12), sil); b.position.y = 0.62 * h; const hd = new THREE.Mesh(new THREE.SphereGeometry(0.12 * h, 16, 12), sil); hd.position.y = 1.3 * h; p.add(b, hd); p.position.x = x; return p; };
-  g.add(person(1.0, -0.45), person(0.95, 0.35), person(0.62, -0.02));
+  const mat = stoneMaterial({seed: 31, tiles: 2, base: '#3c4048', rough: 0.7, repeat: [2, 1]});
+  const wallGeo = new RoundedBoxGeometry(1.4, 3.4, 1.0, 2, 0.04);
+  for (const x of [-1.55, 1.55]) { const w = new THREE.Mesh(wallGeo, mat); w.position.set(x, 1.7, 0); w.castShadow = w.receiveShadow = true; g.add(w); }
+  const lintel = new THREE.Mesh(new RoundedBoxGeometry(4.5, 0.9, 1.1, 2, 0.04), mat); lintel.position.set(0, 3.75, 0); lintel.castShadow = lintel.receiveShadow = true; g.add(lintel);
+  const roof = new THREE.Mesh(new RoundedBoxGeometry(5.0, 0.3, 4.0, 2, 0.05), mat); roof.position.set(0, 4.35, -1.4); roof.castShadow = true; g.add(roof);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(4.5, 4.2, 0.3), mat); back.position.set(0, 2.1, -3.2); back.receiveShadow = true; g.add(back);
+  const sideL = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4.2, 3.2), mat); sideL.position.set(-2.1, 2.1, -1.6); g.add(sideL);
+  const sideR = sideL.clone(); sideR.position.x = 2.1; g.add(sideR);
+  const warm = new THREE.PointLight('#e6a95e', 0, 9, 1.6); warm.position.set(0, 2.2, -1.6); g.add(warm);
+  const glow = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 3.1), new THREE.MeshBasicMaterial({color: '#e2a65c', transparent: true, opacity: 0, depthWrite: false}));
+  glow.position.set(0, 1.55, -3.0); g.add(glow);
+  g.userData = {warm, glow};
   scene.add(g);
   return g;
+}
+
+/** Жолдағы ұсақ кедергілер (кейіпкер байқамай сүрінетін тастар). */
+export function buildPebbles(scene, x, zs, seed) {
+  const r = rng(seed), mat = stoneMaterial({seed: seed + 3, tiles: 1, base: '#4a4f57', grout: false, rough: 0.6});
+  return zs.map(z => { const m = new THREE.Mesh(new THREE.DodecahedronGeometry(0.06 + r() * 0.05, 1), mat); m.scale.set(1.3, 0.6, 1); m.position.set(x + (r() - 0.5) * 0.9, 0.13, z); m.rotation.y = r() * 3; m.castShadow = m.receiveShadow = true; scene.add(m); return m; });
+}
+
+/** Жоғарылайтын архитектура (қызмет): тар, биік сатылы мұнара. */
+export function buildTower(scene, x, z) {
+  const mat = stoneMaterial({seed: 41, tiles: 2, base: '#41464f', rough: 0.6, repeat: [1, 3]});
+  const g = new THREE.Group(); g.position.set(x, 0.1, z);
+  for (let i = 0; i < 9; i++) { const w = 2.6 - i * 0.2, b = new THREE.Mesh(new RoundedBoxGeometry(w, 0.55, w * 0.8, 2, 0.04), mat); b.position.y = 0.275 + i * 0.55; b.castShadow = b.receiveShadow = true; g.add(b); }
+  scene.add(g); return g;
 }
