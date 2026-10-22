@@ -5,6 +5,7 @@
 (уақыттары сахнадан алынған: out/events.json, tools/events.mjs), блок көтеру/қою, өлшеуіш, ұсақ тастар,
 ауысулардағы ұстамды whoosh. Дикторға орын: 1–4 кГц аймағы музыкада әлсіретілген, жалпы деңгей төмен.
 Нәтиже: out/audio.wav (48 кГц, 32-бит PCM стерео, дәл 90.000 с).
+--voice source/voice_orig.wav: түпнұсқа дыбыс + фоли → out/audio_voice.wav (партитурасыз).
 """
 import json, os, sys
 import numpy as np
@@ -297,16 +298,34 @@ def main():
     fx = apply_reverb(fx, ir_big, 0.12)
 
     mix = music + fx + room_tone()
+    if VOICE:
+        # түпнұсқа видеоның дыбысы (диктор + оның фондық музыкасы) негізгі жол болады; менің партитурам
+        # екі музыка қақтығыспауы үшін алынып тасталады, тек фоли/whoosh/ауа ақырын қосылады
+        sr_v, v = wavfile.read(VOICE)
+        assert sr_v == SR, f'{VOICE}: {sr_v} Гц (48000 керек)'
+        v = v.astype(np.float64) / (2 ** 31 if v.dtype == np.int32 else 2 ** 15)
+        if v.ndim == 1:
+            v = np.stack([v, v], 1)
+        voice = np.zeros((N, 2)); voice[: min(N, len(v))] = v[:N]
+        bed = fx + room_tone()
+        # фоли шыңы дауыс шыңынан ~11 дБ төмен: естіледі, бірақ сөзді баспайды
+        bed *= np.abs(voice).max() * 10 ** (-11 / 20) / np.abs(bed).max()
+        mix = voice + bed
     # табиғи аяқталу: соңғы 0.6 с толық тынышталу, басы 0.15 с fade-in (басылу болмауы үшін)
     fo = env_points([(0, 0.0), (0.15, 1.0), (89.2, 1.0), (89.9, 0.0), (90, 0.0)])
+    if VOICE:  # дауыс бірден басталады және соңына дейін сақталады: қысқа fade-in, соңғы 0.4 с ғана сөнеді
+        fo = env_points([(0, 0.0), (0.01, 1.0), (89.55, 1.0), (89.95, 0.0), (90, 0.0)])
     mix *= fo[:, None]
     peak = np.abs(mix).max()
     mix *= 10 ** (-3 / 20) / peak   # шың −3 dBFS (кейін ebur128 бойынша нормалау)
-    out = os.path.join(ROOT, 'out', 'audio.wav')
+    out = os.path.join(ROOT, 'out', 'audio_voice.wav' if VOICE else 'audio.wav')
     pcm = np.clip(mix * (2 ** 31 - 1), -(2 ** 31), 2 ** 31 - 1).astype(np.int32)
     wavfile.write(out, SR, pcm)
     print(f'{out}: {len(mix) / SR:.3f} с, шың {20 * np.log10(np.abs(mix).max()):.1f} dBFS')
 
 
+VOICE = None
 if __name__ == '__main__':
+    if '--voice' in sys.argv:
+        VOICE = sys.argv[sys.argv.index('--voice') + 1]
     main()
