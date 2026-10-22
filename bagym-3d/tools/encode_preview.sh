@@ -3,7 +3,7 @@
 # Тақ кадрлар әлі жоқ болса, жұп кадрлар (15 fps) екі еселеніп 30 fps-ке келтіріледі.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-odd=$(ls frames_preview/f_*[13579].jpg 2>/dev/null | wc -l); even=$(ls frames_preview/f_*[02468].jpg | wc -l)
+odd=$( (ls frames_preview/f_*[13579].jpg 2>/dev/null || true) | wc -l); even=$(ls frames_preview/f_*[02468].jpg | wc -l)
 if [ "$odd" -ge 1350 ]; then IN=(-framerate 30 -i frames_preview/f_%04d.jpg); FR=""; echo "30 fps (толық)"
 else
   [ "$even" -ge 1350 ] || { echo "жұп кадрлар толық емес: $even/1350" >&2; exit 1; }
