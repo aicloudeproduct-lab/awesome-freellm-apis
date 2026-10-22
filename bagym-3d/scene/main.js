@@ -109,6 +109,7 @@ function resetFrame() {
 }
 
 window.DURATION = DURATION;
+window.__S = S;
 window.renderFrame = (t) => {
   resetFrame();
   const shot = shotAt(t);
@@ -120,6 +121,7 @@ window.renderFrame = (t) => {
   palm.visible = !!S.palmWipe; if (S.palmWipe) palm.position.set(S.palmWipe.x * 0.32, -0.02 + S.palmWipe.y * 0.02, -0.26);
   pillar.visible = S.pillarWipe > 0 && S.pillarWipe < 2; if (pillar.visible) pillar.position.set(1.3 - S.pillarWipe * 1.3, 0, -0.9);
   grade.uniforms.uTime.value = t; grade.uniforms.uVig.value = 0.42 + (S.shade - 0.1) * 0.9; grade.uniforms.uFade.value = S.endFade;
+  if (q.has('norender')) { S.camera.updateMatrixWorld(); return shot.name; } // дыбыс оқиғаларын алу үшін (tools/events.mjs)
   if (q.has('direct')) renderer.render(scene, camera); else composer.render();
   setTitle(S.title, t);
   return shot.name;
