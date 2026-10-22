@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<title>Бағымен тартыспа — 3D</title>
+<style>
+  @font-face { font-family: "Noto Serif"; src: url("../public/fonts/NotoSerif.ttf") format("truetype"); font-weight: 100 900; }
+  @font-face { font-family: "Noto Sans"; src: url("../public/fonts/NotoSans.ttf") format("truetype"); font-weight: 100 900; }
+  html, body { margin: 0; background: #111318; overflow: hidden; }
+  #stage { position: relative; width: 2048px; height: 1536px; }
+  #stage canvas { display: block; }
+  #title { position: absolute; left: 0; right: 0; top: 214px; text-align: center; color: #EEE7DA; font-family: "Noto Serif", serif;
+    font-weight: 500; font-size: 76px; line-height: 1.32; letter-spacing: 0.01em; text-shadow: 0 2px 36px rgba(0,0,0,0.55); pointer-events: none; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "../node_modules/three/build/three.module.js", "three/addons/": "../node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="stage"><div id="title"></div></div>
+<script type="module" src="./main.js"></script>
+</body>
+</html>
