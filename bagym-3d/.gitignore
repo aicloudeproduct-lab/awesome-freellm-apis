@@ -3,3 +3,4 @@ frames/
 tests/
 out/
 *.log
+frames_preview/
