@@ -99,7 +99,7 @@ function setTitle(T, t) {
 }
 
 function resetFrame() {
-  S.title = null; S.palmWipe = null; S.pillarWipe = 0; S.shade = 0.1; S.exposure = 0.95; S.endFade = 0; S.fogDensity = 0.028;
+  S.title = null; S.palmWipe = null; S.pillarWipe = 0; S.shade = 0.1; S.exposure = 0.95; S.endFade = 0; S.fogDensity = 0.028; S.envIntensity = 0.35;
   S.family.forEach(c => (c.root.visible = false)); S.dwelling.userData.warm.intensity = 0; S.dwelling.userData.glow.material.opacity = 0;
   S.pool.material.opacity = 0; S.pool.position.set(-1.45, 0.104, -1.0);
   S.ownLight.position.set(3.4, 17.5, -10); S.ownLight.target.position.set(1.45, 0, -8);
@@ -115,6 +115,7 @@ window.renderFrame = (t) => {
   const shot = shotAt(t);
   shot.fn(S, t);
   renderer.toneMappingExposure = S.exposure;
+  scene.environmentIntensity = S.envIntensity;
   scene.fog.density = S.fogDensity;
   world.dustA.update(t); world.dustB.update(t);
   world.shaftA.material.uniforms.uTime.value = t; world.shaftB.material.uniforms.uTime.value = t;

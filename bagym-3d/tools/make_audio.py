@@ -261,7 +261,7 @@ def build_foley(events):
         pan = float(np.clip(s['x'] / 6, -0.5, 0.5))
         place(buf, footstep(s['dist'], heavy), s['t'], pan=pan, gain=g * heavy)
     # құрылыс циклдары (timeline.js CYC: көтеру +0.9 с, қою +4.3 с)
-    cyc = {'O1': (6.2, -0.35, 1.0), 'O2': (12.6, -0.35, 1.0), 'H1': (7.3, 0.35, 0.8), 'H2': (18.4, 0.35, 1.0)}
+    cyc = {'O1': (5.6, -0.35, 1.0), 'O2': (12.6, -0.35, 1.0), 'H1': (7.3, 0.35, 0.8), 'H2': (18.4, 0.35, 1.0)}
     for k, (T, pan, g) in cyc.items():
         place(buf, stone_lift(), T + 0.75, pan=pan, gain=0.22 * g)
         place(buf, stone_set(), T + 4.3, pan=pan, gain=0.28 * g)

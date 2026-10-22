@@ -45,6 +45,9 @@ export function setupFilm(S) {
 
 // ---------- құрылыс циклі: көтеру → бұрылу → жүру → қою (→ өлшеу) ----------
 const slotHome = (stairs, idx) => stairs[idx].userData.home;
+const RELEASE = {...POSE.stand, spine: [0.08, 0, 0], armL: {sh: [-0.5, 0, 0.12], el: -0.6, grip: 0.3}, armR: {sh: [-0.5, 0, -0.12], el: -0.6, grip: 0.3}};
+// орнында бұрылу кезінде табандар кезекпен көтеріледі (сырғымайды)
+const turnFeet = (turning, lt) => ({footL: [0.1, turning ? Math.max(0, Math.sin(lt * Math.PI * 2)) * 0.05 : 0, 0.03], footR: [-0.1, turning ? Math.max(0, -Math.sin(lt * Math.PI * 2)) * 0.05 : 0, -0.03]});
 /** side: −1 (басқа адам, сыртқы жағы −x), +1 (кейіпкер). Цикл 5.0 с (өлшеу болса 6.2 с). warp — әрекеттің баяулауы. */
 function carryCycle(S, ch, side, carry, pileTop, stairs, slotIdx, u, measure = false) {
   const pathX = side < 0 ? OX : HX, lane = pathX + side * 0.62, zPile = ZC0, zSlot = slotHome(stairs, slotIdx).z;
@@ -57,7 +60,7 @@ function carryCycle(S, ch, side, carry, pileTop, stairs, slotIdx, u, measure = f
     armL: {sh: [-0.62, 0, 0.28], el: -1.0, wr: [0, 0, -0.25], grip: 0.9}, armR: {sh: [-0.62, 0, -0.28], el: -1.0, wr: [0, 0, 0.25], grip: 0.9}};
   const placeHi = home.y > 1.0;
   const place = {...hold, hipY: placeHi ? 0.95 : 0.9, spine: [0.16, 0, 0], armL: {sh: [placeHi ? -1.2 : -0.95, 0, 0.26], el: placeHi ? -0.55 : -0.7, wr: [0, 0, -0.25], grip: 0.9}, armR: {sh: [placeHi ? -1.2 : -0.95, 0, -0.26], el: placeHi ? -0.55 : -0.7, wr: [0, 0, 0.25], grip: 0.9}};
-  const release = {...POSE.stand, spine: [0.08, 0, 0], armL: {sh: [-0.5, 0, 0.12], el: -0.6, grip: 0.3}, armR: {sh: [-0.5, 0, -0.12], el: -0.6, grip: 0.3}};
+  const release = RELEASE;
   const measureP = {...POSE.stand, spine: [0.2, 0, 0], head: [0.25, 0, 0], armL: {sh: [-0.2, 0, 0.1], el: -0.3}, armR: {sh: [-1.05, 0, -0.1], el: -0.45, grip: 0.8}};
   const T = {lift: 0.9, up: 1.5, turn1: 2.0, walk: 3.1, turn2: 3.5, set: 4.3, end: 5.0};
   if (u < T.lift) { pose = posesAt(u, [[0, POSE.stand], [0.25, POSE.stand], [T.lift, crouch]]); }
@@ -74,7 +77,7 @@ function carryCycle(S, ch, side, carry, pileTop, stairs, slotIdx, u, measure = f
     // орнында бұрылу: табандар кезекпен көтеріледі (сырғымайды)
     const turning = (u >= T.up && u < T.turn1) || (u >= T.walk && u < T.turn2);
     const lt = turning ? range(u, u < T.turn1 ? T.up : T.walk, u < T.turn1 ? T.turn1 : T.turn2) : 0;
-    applyStand(ch, [lane, TOP, z], heading, pose, {footL: [0.1, turning ? Math.max(0, Math.sin(lt * Math.PI * 2)) * 0.05 : 0, 0.03], footR: [-0.1, turning ? Math.max(0, -Math.sin(lt * Math.PI * 2)) * 0.05 : 0, -0.03]});
+    applyStand(ch, [lane, TOP, z], heading, pose, turnFeet(turning, lt));
   }
   // блок: үйіндіде → қолда → орнында
   if (u < T.lift) { carry.position.copy(pileTop); carry.quaternion.identity(); carry.visible = true; }
@@ -102,8 +105,14 @@ function lights(S, o) {
 }
 function aim(shaft, from, to) { const d = new THREE.Vector3().subVectors(to, from); shaft.position.copy(from); shaft.quaternion.setFromUnitVectors(V(0, -1, 0), d.normalize()); }
 
-// құрылыс кестесі (әлемдік уақыт): басқа адам 8, 9 блоктарды қояды; кейіпкер 7, 8 блоктарды
-const CYC = {O1: 6.2, O2: 12.6, H1: 7.3, H2: 18.4};
+// құрылыс кестесі (әлемдік уақыт): басқа адам 8, 9 блоктарды қояды; кейіпкер 7, 8 блоктарды.
+// Циклдар арасында адам үйіндіге жаяу қайтады — ешбір сәтте телепорт жоқ.
+const CYC = {O1: 5.6, O2: 12.6, H1: 7.3, H2: 18.4};
+const PLAN = {
+  O: [{T: CYC.O1, idx: 8, pile: 1, dur: 5.0}, {T: CYC.O2, idx: 9, pile: 0, dur: 6.4, measure: true}],
+  H: [{T: CYC.H1, idx: 7, pile: 1, dur: 5.0}, {T: CYC.H2, idx: 8, pile: 0, dur: 5.0, back: true, wait: 1.8}],
+};
+const RET = {turn: 0.4, walk: 1.2};
 function buildState(S, t) {
   // сатылардағы блоктардың көрінуі
   const oDone = 8 + (t >= CYC.O1 + 4.3 ? 1 : 0) + (t >= CYC.O2 + 4.3 ? 1 : 0);
@@ -116,21 +125,36 @@ function buildState(S, t) {
 }
 const pileTopPos = (pile, n) => pile[Math.max(0, n)].position.clone();
 
+/** Блок қойылғаннан кейін: ішке қарап тұрған қалыптан бұрылу → жол бойымен үйіндіге қайту → сыртқа бұрылу. */
+function returnTrip(ch, side, zFrom, u, wait = 0) {
+  const lane = (side < 0 ? OX : HX) + side * 0.62, inward = -side * Math.PI / 2, out = side * Math.PI / 2;
+  const T1 = RET.turn, T2 = T1 + RET.walk, T3 = T2 + RET.turn;
+  if (u < 0) { applyStand(ch, [lane, TOP, zFrom], inward, mixPose(RELEASE, POSE.stand, esine(range(u, -wait, -wait + 0.8)))); return; }
+  if (u >= T1 && u < T2) { applyWalk(ch, lane, uu => lerp(zFrom, ZC0, esine(range(uu, T1, T2))), u, T1 - 0.01, 0, POSE.stand, {stride: 0.5, swing: 0.36}); return; }
+  const first = u < T1, lt = first ? range(u, 0, T1) : range(u, T2, T3), turning = first || u < T3;
+  const heading = first ? lerp(inward, 0, esine(lt)) : lerp(0, out, esine(lt));
+  applyStand(ch, [lane, TOP, first ? zFrom : ZC0], heading, first && !wait ? mixPose(RELEASE, POSE.stand, esine(lt)) : POSE.stand, turnFeet(turning, lt));
+}
+
+/** Бір адамның құрылыс кестесі: цикл алдында үйінді жанында күтеді, циклдар арасында қайтады. warp — кейіпкердің баяулауы. */
+function runPlan(S, ch, side, plan, carry, pile, stairs, t, warp = 0) {
+  let k = plan.length - 1; while (k >= 0 && t < plan[k].T) k--;
+  const c = plan[Math.max(0, k)];
+  const go = u => carryCycle(S, ch, side, carry, pileTopPos(pile, c.pile), stairs, c.idx, u, c.measure);
+  if (k < 0) { go(0); carry.visible = false; return; }
+  let u = t - c.T;
+  if (warp > 0) u = Math.min(u, 0.6) + Math.max(0, u - 0.6) * (1 - warp);
+  if (u < c.dur) { go(u); return; }
+  if (k + 1 < plan.length || c.back) { carry.visible = false; returnTrip(ch, side, slotHome(stairs, c.idx).z, u - c.dur - (c.wait || 0), c.wait || 0); return; }
+  go(c.dur - 1e-4); carry.visible = false;
+}
+
 /** Екі кейіпкердің құрылыс кезеңіндегі (0–25 с) әрекеті. slowH — кейіпкердің назары ауғандағы баяулау. */
 function workPhase(S, t, {slowH = 0} = {}) {
   buildState(S, t);
-  const o = S.other, h = S.hero;
-  const oc = t < CYC.O2 ? {T: CYC.O1, idx: 8, pile: 1} : {T: CYC.O2, idx: 9, pile: 0, measure: true};
-  const ou = t - oc.T;
-  if (ou >= 0 && ou < (oc.measure ? 6.4 : 5.0)) carryCycle(S, o, -1, S.carryO, pileTopPos(S.pileO, oc.pile), S.stairsO, oc.idx, ou, oc.measure);
-  else { S.carryO.visible = false; applyStand(o, [OX - 0.62, TOP, ZC0 - 3 * BLK], Math.PI / 2, {...POSE.stand, head: [0.1, -0.2, 0]}); }
-  // кейіпкер: баяулау кезінде циклдің ішкі уақыты баяу жүреді
-  const hc = t < CYC.H2 ? {T: CYC.H1, idx: 7, pile: 1} : {T: CYC.H2, idx: 8, pile: 0};
-  let hu = t - hc.T;
-  if (slowH > 0) hu = Math.min(hu, 0.6) + Math.max(0, hu - 0.6) * (1 - slowH);
-  if (hu >= 0 && hu < 5.0) carryCycle(S, h, 1, S.carryH, pileTopPos(S.pileH, hc.pile), S.stairsH, hc.idx, hu);
-  else { S.carryH.visible = false; applyStand(h, [HX + 0.62, TOP, ZC0 + 0.3], Math.PI / 2, {...POSE.stand, spine: [0.08, 0, 0]}); }
-  // (өлшеу сызғышы басқа адамның қолында: 17.3–18.6)
+  runPlan(S, S.other, -1, PLAN.O, S.carryO, S.pileO, S.stairsO, t);
+  runPlan(S, S.hero, 1, PLAN.H, S.carryH, S.pileH, S.stairsH, t, slowH);
+  // (өлшеу сызғышы басқа адамның қолында: 17.6–18.8)
   const mu = t - CYC.O2;
   if (mu > 5.0 && mu < 6.2) { S.other.root.updateMatrixWorld(true); const w = new THREE.Vector3(0, -0.08, 0.02); S.other.arm.R.wr.localToWorld(w); S.ruler.position.set(OX + Math.sin((mu - 5) * 4) * 0.04, TOP + 4 * BH + 0.008, w.z); S.ruler.rotation.y = 0; }
 }
@@ -192,7 +216,7 @@ export const SHOTS = [
     S.exposure = 0.95;
   }},
   {name: 'S6_qyzmet', t0: 25.0, t1: 30.0, fn(S, t) {
-    workPhase(S, 25);
+    workPhase(S, 28);
     const u = range(t, 25, 30), tw = S.tower.position;
     // сатының қырынан мұнараға: камера жоғары көтеріледі (қол қозғалысын жалғастырады)
     cam(S, V(tw.x + 2.2, lerp(0.45, 3.6, eio(u)), tw.z + lerp(1.8, 6.4, esine(u))), V(tw.x, lerp(0.4, 4.4, eio(u)), tw.z), lerp(46, 40, u));
@@ -202,7 +226,7 @@ export const SHOTS = [
     S.exposure = 0.95;
   }},
   {name: 'S7_ataq', t0: 30.0, t1: 35.0, fn(S, t) {
-    workPhase(S, 25);
+    workPhase(S, 28);
     const u = range(t, 30, 35), topZ = ZC0 - 3 * BLK, top = V(OX, TOP + 4 * BH, topZ);
     applyStand(S.other, [top.x, top.y, top.z], 0.35, {...POSE.upright, head: [-0.12, 0, 0]});
     applyStand(S.hero, [HX, TOP, 1.6], -2.6, {...POSE.stand, head: [-0.22, 0.1, 0]});
@@ -212,7 +236,7 @@ export const SHOTS = [
     S.exposure = 0.95;
   }},
   {name: 'S8_baspana', t0: 35.0, t1: 39.0, fn(S, t) {
-    workPhase(S, 25);
+    workPhase(S, 28);
     const u = range(t, 35, 39), d = S.dwelling.position;
     S.dwelling.userData.warm.intensity = 18 * ss(range(t, 35.0, 36.4)); S.dwelling.userData.glow.material.opacity = 0.85 * ss(range(t, 35.0, 36.4));
     applyStand(S.other, [d.x + 1.3, 0, d.z + 3.2], -0.4, {...POSE.stand, head: [0, -0.15, 0]});
@@ -221,7 +245,7 @@ export const SHOTS = [
     S.exposure = 0.95;
   }},
   {name: 'S9_otbasy', t0: 39.0, t1: 43.0, fn(S, t) {
-    workPhase(S, 25);
+    workPhase(S, 28);
     const u = range(t, 39, 43), d = S.dwelling.position;
     S.dwelling.userData.warm.intensity = 18; S.dwelling.userData.glow.material.opacity = 0.85;
     // алыстағы жылы отбасы: есік алдында, жылы жарыққа қарсы
@@ -239,7 +263,7 @@ export const SHOTS = [
     S.exposure = 0.95;
   }},
   {name: 'S10_qol_sozu', t0: 43.0, t1: 50.0, fn(S, t) {
-    workPhase(S, 25); S.family.forEach(c => (c.root.visible = false));
+    workPhase(S, 28); S.family.forEach(c => (c.root.visible = false));
     const u = range(t, 43, 50);
     // дөңгелек жарық көзі (сәуле табаны) → кейіпкердің иығынан өтіп, оның көзқарасы
     const beamX = kf(t, [[43, OX], [46.2, OX], [48.5, OX - 0.9]]);
@@ -250,13 +274,15 @@ export const SHOTS = [
     applyStand(S.other, [OX - 0.62, TOP, ZC0 - 3 * BLK], Math.PI / 2, POSE.stand);
     // жарық көзінен (дөңгелек) басталып, кейіпкердің оң иығының сыртынан өтеді
     const k = eio(range(u, 0, 0.5));
-    const pos = V(OX + 0.6, 1.9, 1.2).lerp(V(HX + 1.05, 1.68, -1.75), k);
+    // қисық жол (квадраттық Безье): кейіпкердің денесін айналып өтеді, иық сыртында аяқталады
+    const P0 = V(OX + 0.6, 1.9, 1.2), C = V(HX + 0.95, 2.2, 1.0), P1 = V(HX + 1.05, 1.68, -1.75);
+    const pos = P0.multiplyScalar((1 - k) ** 2).add(C.multiplyScalar(2 * k * (1 - k))).add(P1.multiplyScalar(k * k));
     cam(S, pos, V(beamX, lerp(0.0, 0.95, k), -1.0), lerp(38, 42, u));
     lights(S, {amber: 520, key: 0.42, amberFrom: V(beamX - 1.8, 17.5, -1.0), amberAt: V(beamX, 0, -1.0), shaftA: 0.9});
     S.exposure = 0.95;
   }},
   {name: 'S11_qabyldau', t0: 50.0, t1: 58.0, fn(S, t) {
-    workPhase(S, 25);
+    workPhase(S, 28);
     const u = range(t, 50, 58);
     const rel = esine(range(t, 50.2, 52.4)), turn = esine(range(t, 53.0, 55.2));
     const base = mixPose({...POSE.stand, armR: {sh: [-1.25, -0.2, -0.1], el: -0.12, grip: 1.2}, brow: 1}, {...POSE.slump, brow: 0.3}, rel);
@@ -298,13 +324,14 @@ export const SHOTS = [
     const base = {...POSE.slump, spine: [0.3, 0, 0], head: [0.28, 0.4 * Math.max(0, Math.sin((t - 66) * 0.8)), 0], armL: {sh: [0.1, 0, 0.04], el: -0.1, grip: 1.25}, armR: {sh: [0.1, 0, -0.04], el: -0.1, grip: 1.25}, brow: 1};
     applyWalk(S.hero, HX, pz, t, 64, Math.PI, base, {stride: 0.42, swing: 0.55, armSwing: 0.35});
     applyStand(S.other, [OX, TOP, -12.5], Math.PI, POSE.upright);
-    // камера кейіпкерді айналып өтеді; соңында тас бағана кадрды жабады
-    const hz = pz(t), ang = lerp(0.9, -1.6, esine(u)), rad = lerp(2.6, 3.2, u);
+    // камера кейіпкерді +x жағынан айналып, алдынан қарайды (басқа адам −x жағында тұр); соңында тас бағана кадрды жабады
+    const hz = pz(t), ang = lerp(0.9, 3.3, esine(u)), rad = lerp(2.6, 3.2, u);
     const pos = V(HX + Math.sin(ang) * rad, lerp(1.3, 1.6, u), hz + Math.cos(ang) * rad);
     cam(S, pos, V(HX, 0.95, hz), 40);
     S.pillarWipe = range(t, 74.15, 75.0);
-    lights(S, {amber: 420, own: 200, key: 0.36, shaftA: 0.55, amberFrom: V(-3.3, 17.5, -12), amberAt: V(OX, 0, -12.5), fog: 0.04});
-    S.shade = 0.35; S.exposure = 0.83;
+    // камера жарыққа қарсы бұрылғанда еденде жылтыр болмауы үшін: негізгі және жалпы жарық біртіндеп азаяды (көлеңке қоюланады)
+    lights(S, {amber: 420, own: 200 - 95 * esine(u), key: 0.36 * (1 - 0.75 * esine(u)), hemi: 0.55 - 0.22 * esine(u), shaftA: 0.55, amberFrom: V(-3.3, 17.5, -12), amberAt: V(OX, 0, -12.5), fog: 0.04});
+    S.shade = 0.35; S.exposure = 0.83; S.envIntensity = lerp(0.35, 0.1, esine(u)); // жарыққа қарсы бағытта еденнің шағылысы азаяды
   }},
   {name: 'S14_tilek', t0: 75.0, t1: 82.0, fn(S, t) {
     const u = range(t, 75, 82);

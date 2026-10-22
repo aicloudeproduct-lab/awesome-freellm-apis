@@ -22,7 +22,7 @@ const browser = await pw.chromium.launch({args: ['--use-angle=swiftshader', '--e
 const page = await browser.newPage({viewport: {width: Math.round(2048 * scale), height: Math.round(1536 * scale)}, deviceScaleFactor: 1});
 page.on('pageerror', e => console.error('PAGE ERROR', e.message));
 page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') console.error('console:', m.text()); });
-await page.goto(`http://127.0.0.1:${port}/scene/index.html?scale=${scale}&ao=${arg('ao', '2')}`);
+await page.goto(`http://127.0.0.1:${port}/scene/index.html?scale=${scale}&${arg("flags", "noao")}`);
 await page.evaluate(() => window.__ready);
 const ts = (arg('t', '5')).split(',').map(Number), outs = (arg('out', '')).split(',');
 for (let i = 0; i < ts.length; i++) {
