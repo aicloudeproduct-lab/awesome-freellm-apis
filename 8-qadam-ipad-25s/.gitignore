@@ -1,0 +1,5 @@
+frames/
+tests/
+audio/*.wav
+out/
+*.log

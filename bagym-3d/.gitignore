@@ -1,0 +1,7 @@
+node_modules/
+frames/
+tests/
+out/
+*.log
+frames_preview/
+source/
