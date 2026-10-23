@@ -406,7 +406,7 @@ const finaleKeys = (t: number): Key[] => {
   const lowArmF = armTo(T2.sh, add(T2.sh, {x: 0.07 * H, y: 0.26 * H}), -1);
   const lower = base({py: pyL, spine: 0.52, hunch: 0.3, neck: 0.2, gaze: 0.06, shDrop: 0.004, aN: lowArm.a, eN: lowArm.e, aF: lowArmF.a, eF: lowArmF.e});
   const release = base({...lower, py: pyL - 0.008 * H, spine: 0.47, aN: lowArm.a - 0.06, eN: lowArm.e + 0.08});
-  const tall = base({spine: -0.025, hunch: 0, neck: -0.02, gaze: 0, shDrop: -0.012, aN: 0.03, eN: 0.1, aF: 0.0, eF: 0.12, py: stand.py - 0.006 * H});
+  const tall = base({spine: -0.025, hunch: 0, neck: -0.02, gaze: 0, shDrop: -0.012, aN: 0.13, eN: 0.24, aF: 0.05, eF: 0.2, py: stand.py - 0.006 * H});
   const look = base({...tall, neck: -0.2, gaze: -0.14, spine: -0.045});
   return unwrapKeys([
     {t: F.t0, v: toArr(stand), hold: true},

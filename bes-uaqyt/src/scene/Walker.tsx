@@ -23,9 +23,10 @@ export const StoneDefs: React.FC<{at: Atmos}> = ({at}) => (
   </radialGradient>
 );
 
-const Stone: React.FC<{k: number; r: number; x: number; y: number; rot?: number; scale?: number; opacity?: number}> = ({k, r, x, y, rot = 0, scale = 1, opacity = 1}) => (
+const Stone: React.FC<{k: number; r: number; x: number; y: number; rot?: number; scale?: number; opacity?: number; free?: boolean}> = ({k, r, x, y, rot = 0, scale = 1, opacity = 1, free}) => (
   <g transform={`translate(${f(x)} ${f(y)}) rotate(${f((rot * 180) / Math.PI)}) scale(${f(scale)})`} opacity={opacity}>
-    <path d={stonePath(`stone-${k}`, r)} fill="url(#stoneG)" stroke="rgba(0,0,0,0.28)" strokeWidth={1} />
+    {free && <path d={stonePath(`stone-${k}`, r)} fill="none" stroke="rgba(6,8,12,0.35)" strokeWidth={5} />}
+    <path d={stonePath(`stone-${k}`, r)} fill="url(#stoneG)" stroke={free ? 'rgba(10,10,12,0.6)' : 'rgba(0,0,0,0.28)'} strokeWidth={free ? 1.6 : 1} />
   </g>
 );
 
@@ -41,8 +42,11 @@ const PackBody: React.FC<{pack: PackState; t: number; at: Atmos}> = ({pack, t, a
   const light = mix(base, '#ffffff', 0.12);
   const body = `M0 ${f(top + slump * 0.6)} L${f(-Tk * 0.92)} ${f(top + slump)} Q${f(-Tk * 1.13)} ${f(mid)} ${f(-Tk * 0.96)} ${f(bot - 0.02 * H)} Q${f(-Tk * 0.55)} ${f(bot + 0.012 * H)} ${f(-0.012 * H)} ${f(bot)} Z`;
   const pocket = `M${f(-Tk * 0.42)} ${f(mid + 0.012 * H)} L${f(-Tk * 0.98)} ${f(mid + 0.018 * H)} L${f(-Tk * 0.95)} ${f(bot - 0.03 * H)} Q${f(-Tk * 0.7)} ${f(bot - 0.012 * H)} ${f(-Tk * 0.42)} ${f(bot - 0.02 * H)} Z`;
+  // an empty pack on the ground settles lower and wider
+  const sy = 1 - 0.3 * pack.empty;
+  const sx = 1 + 0.18 * pack.empty;
   return (
-    <g>
+    <g transform={`translate(0 ${f(bot)}) scale(${f(sx)} ${f(sy)}) translate(0 ${f(-bot)})`}>
       <path d={body} fill={base} stroke={dark} strokeWidth={1.4} />
       <path d={`M${f(-Tk * 0.18)} ${f(top + 0.02 * H)} Q${f(-Tk * 0.75)} ${f(mid - 0.02 * H)} ${f(-Tk * 0.7)} ${f(bot - 0.03 * H)}`} stroke={light} strokeWidth={2} fill="none" opacity={0.45} />
       <path d={pocket} fill={dark} opacity={0.55} />
@@ -135,7 +139,7 @@ export const FallingStones: React.FC<{t: number}> = ({t}) => (
           {ghosts.map((g) => (
             <Stone key={g} k={k} r={s.r} x={st.x - (st.vx * g) / 200} y={st.y - (st.vy * g) / 200} rot={st.rot} scale={st.scale} opacity={st.alpha * (0.22 / g)} />
           ))}
-          <Stone k={k} r={s.r} x={st.x} y={st.y} rot={st.rot} scale={st.scale} opacity={st.alpha} />
+          <Stone k={k} r={s.r} x={st.x} y={st.y} rot={st.rot} scale={st.scale} opacity={st.alpha} free />
         </g>
       );
     })}

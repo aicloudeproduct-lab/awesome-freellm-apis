@@ -127,7 +127,7 @@ export const CAMERA = {
 /** Text cues (seconds). fadeIn/out kept within 0.3–0.5 s per the brief. */
 export const TEXT_TIMING = {
   title: {delay: 0.05, hold: 1.75, fadeIn: 0.45, fadeOut: 0.5, rise: 14},
-  stone: {delay: 0.12, hold: 1.05, fadeIn: 0.38, fadeOut: 0.45, drift: 12},
+  stone: {delay: 0.05, hold: 1.0, fadeIn: 0.36, fadeOut: 0.45, drift: 12},
   final: {
     lines: [16.75, 17.35, 17.95],
     fadeIn: 0.5,
@@ -135,5 +135,5 @@ export const TEXT_TIMING = {
     out: 19.55,
   },
   fadeToBlack: [19.55, 20.0] as [number, number],
-  fadeFromBlack: [0, 0.35] as [number, number],
+  fadeFromBlack: [0, 0.3] as [number, number],
 };

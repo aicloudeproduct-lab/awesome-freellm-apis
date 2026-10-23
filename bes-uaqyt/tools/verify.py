@@ -94,7 +94,7 @@ if len(jumps):
     fail(f'colour jumps at {jumps[:10]}')
 
 # ---- contact sheet every 0.5 s
-times = np.arange(0, dur - 0.01, 0.5)
+times = np.arange(0, min(dur, 20.0) - 0.05, 0.5)
 thumbs = []
 for t in times:
     p = os.path.join(out_dir, f'f_{t:05.2f}.png')

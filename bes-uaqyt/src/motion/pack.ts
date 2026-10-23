@@ -30,7 +30,7 @@ export const SLOTS = [
   {u: 0.058, v: 0.176, r: 0.043},
   {u: 0.088, v: 0.136, r: 0.041},
   {u: 0.036, v: 0.138, r: 0.038},
-].map((s) => ({u: s.u * H, v: s.v * H, r: s.r * H}));
+].map((s) => ({u: s.u * H, v: s.v * H, r: s.r * H * 1.22}));
 
 const backXf = (t: number): PackXf => {
   const j = jointsAt(t);
@@ -155,7 +155,7 @@ const easeIO = (x: number) => x * x * (3 - 2 * x);
 // ---- stones
 export type StoneState = {x: number; y: number; rot: number; scale: number; alpha: number; vx: number; vy: number; inFront: boolean};
 type Flight = {t0: number; p0: V; v0: V; tb: number; pb: V; vb: V; spin: number};
-const G = 1500;
+const G = 1250;
 const flights: (Flight | null)[] = [null, null, null, null, null];
 const LIFT = 0.1;
 
@@ -224,7 +224,7 @@ export const stoneAt = (k: number, t: number): StoneState | null => {
     y = f.pb.y + f.vb.y * tau + 0.5 * G * tau * tau;
     vx = f.vb.x;
     vy = f.vb.y + G * tau;
-    scale = 1 + 0.16 * smoothstep(0, 0.35, tau);
+    scale = 1 + 0.22 * smoothstep(0, 0.4, tau);
     rot = 0.3 + f.spin * 0.5 * (f.tb - f.t0) + f.spin * tau;
   }
   const depth = y - f.pb.y;

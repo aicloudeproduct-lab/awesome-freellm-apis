@@ -22,7 +22,7 @@ export const Film: React.FC<{audio?: boolean}> = ({audio = true}) => {
   const pack = packAt(t);
   const [fb0, fb1] = TEXT_TIMING.fadeFromBlack;
   const [ft0, ft1] = TEXT_TIMING.fadeToBlack;
-  const black = Math.max(0.7 * (1 - smoothstep(fb0, fb1, t)), 0.86 * smoothstep(ft0, ft1, t));
+  const black = Math.max(0.45 * (1 - smoothstep(fb0, fb1, t)), 0.86 * smoothstep(ft0, ft1, t));
   return (
     <AbsoluteFill style={{background: '#000'}}>
       <svg width={WIDTH} height={HEIGHT} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} style={{position: 'absolute'}}>

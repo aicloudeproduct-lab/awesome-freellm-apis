@@ -81,11 +81,11 @@ export const StoneLabels: React.FC<{t: number; cam: Cam}> = ({t, cam}) => {
     <>
       {STONES.map((label, k) => {
         const fl = flightOf(k);
-        const {a, inP} = fadeWindow(t, fl.tb + T.delay - 0.05, T.fadeIn, T.hold, T.fadeOut);
+        const {a, inP} = fadeWindow(t, fl.t0 + T.delay, T.fadeIn, T.hold, T.fadeOut);
         if (a <= 0.001) return null;
         const anchorX = Math.min(fl.pb.x, BRIDGE.x1 - 10);
         const s = toScreen(cam, anchorX, deckY(anchorX, t) + 150);
-        const drift = (t - fl.tb) * T.drift;
+        const drift = Math.max(0, t - fl.t0) * T.drift;
         return (
           <div
             key={k}

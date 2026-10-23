@@ -39,8 +39,15 @@ export const Cliffs: React.FC<{t: number; at: Atmos}> = ({at}) => {
   const strata = mix(p.cliff, p.cliffRim, 0.16);
   return (
     <g>
-      <path d={pathOf(g.leftFace)} fill={p.cliff} />
-      <path d={pathOf(g.rightFace)} fill={p.cliff} />
+      <defs>
+        <linearGradient id="cliffG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="700">
+          <stop offset="0" stopColor={mix(p.cliff, p.cliffRim, 0.2)} />
+          <stop offset="0.25" stopColor={p.cliff} />
+          <stop offset="1" stopColor={mix(p.cliff, p.chasm, 0.5)} />
+        </linearGradient>
+      </defs>
+      <path d={pathOf(g.leftFace)} fill="url(#cliffG)" />
+      <path d={pathOf(g.rightFace)} fill="url(#cliffG)" />
       {g.strata.map((s, i) => (
         <path key={i} d={`M${s.x0} ${s.y}L${s.x1} ${s.y1}`} stroke={strata} strokeWidth={2} strokeLinecap="round" opacity={0.35} />
       ))}
