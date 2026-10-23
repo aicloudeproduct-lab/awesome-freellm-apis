@@ -1,0 +1,5 @@
+node_modules/
+build/
+output/*
+!output/final.mp4
+out/

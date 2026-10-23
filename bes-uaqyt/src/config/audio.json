@@ -1,0 +1,116 @@
+{
+  "_doc": "Sound design settings for tools/make_audio.py. Levels in dB (pre-normalisation); times come from build/events.json.",
+  "sampleRate": 48000,
+  "seed": 5,
+  "targetLufs": -16.0,
+  "truePeakCeiling": -1.5,
+  "fadeIn": 0.5,
+  "fadeOut": 0.7,
+  "levels": {
+    "wind": -30,
+    "whistle": -42,
+    "roomTone": -39,
+    "pad": -27,
+    "chime": -31,
+    "stepWood": -14,
+    "stepThump": -17,
+    "stepRock": -19,
+    "creak": -24,
+    "ropeCreak": -26,
+    "fabric": -25,
+    "rattle": -30,
+    "stoneGrind": -27,
+    "stoneBounce": -16,
+    "stoneFall": -34,
+    "stoneFar": -27,
+    "knee": -21,
+    "whoosh": -34,
+    "packDown": -22
+  },
+  "reverb": {
+    "decay": 3.4,
+    "predelay": 0.035,
+    "sendHeavy": 0.16,
+    "sendLight": 0.34
+  },
+  "chords": [
+    {
+      "t": 0.0,
+      "notes": [
+        "D2",
+        "A3",
+        "D4",
+        "E4",
+        "F4"
+      ]
+    },
+    {
+      "t": 2.6,
+      "notes": [
+        "Bb1",
+        "F3",
+        "D4",
+        "F4",
+        "A4"
+      ]
+    },
+    {
+      "t": 5.4,
+      "notes": [
+        "F2",
+        "C4",
+        "F4",
+        "G4",
+        "A4"
+      ]
+    },
+    {
+      "t": 8.2,
+      "notes": [
+        "G2",
+        "D4",
+        "F4",
+        "A4",
+        "Bb4"
+      ]
+    },
+    {
+      "t": 10.9,
+      "notes": [
+        "Bb1",
+        "F3",
+        "D4",
+        "F4",
+        "C5"
+      ]
+    },
+    {
+      "t": 13.5,
+      "notes": [
+        "A1",
+        "E3",
+        "A3",
+        "C#4",
+        "E4"
+      ]
+    },
+    {
+      "t": 16.5,
+      "notes": [
+        "D2",
+        "A3",
+        "D4",
+        "F#4",
+        "A4",
+        "E5"
+      ]
+    }
+  ],
+  "chimeNotes": [
+    "A4",
+    "C5",
+    "D5",
+    "E5",
+    "A5"
+  ]
+}
