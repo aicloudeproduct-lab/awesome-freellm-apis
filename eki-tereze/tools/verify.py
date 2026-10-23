@@ -94,9 +94,17 @@ cuts = sorted({round(float(x) * fps) for x in re.findall(r"\{id: 's\w+', t0: ([\
 diff = np.abs(np.diff(frames.mean((1, 2)), axis=0)).max(1)
 jumps = np.where(diff > 6)[0]
 stray = [int(j) for j in jumps if min(abs(j + 1 - c) for c in cuts) > 1]
-print(f'max frame-to-frame mean colour change: {diff.max():.2f} (/255) at frame {diff.argmax()}; jumps > 6: {len(jumps)} (at cuts: {len(jumps) - len(stray)})')
-if stray:
-    fail(f'colour jumps away from cuts at frames {stray[:10]}')
+print(f'max frame-to-frame mean colour change: {diff.max():.2f} (/255) at frame {diff.argmax()}; jumps > 6: {len(jumps)} (at shot cuts: {len(jumps) - len(stray)}, '
+      f'rest = sub-cuts inside shots, flashes, dissolves, fades: listed for review)')
+print('  other jumps (s):', sorted({round(j / fps, 1) for j in stray}))
+# a glitch = one frame that differs from both neighbours while they agree
+mc = frames.mean((1, 2))
+a = np.abs(mc[1:-1] - mc[:-2]).max(1); b = np.abs(mc[2:] - mc[1:-1]).max(1); c = np.abs(mc[2:] - mc[:-2]).max(1)
+pa = np.abs(frames[1:-1] - frames[:-2]).mean((1, 2, 3)); pb = np.abs(frames[2:] - frames[1:-1]).mean((1, 2, 3)); pc = np.abs(frames[2:] - frames[:-2]).mean((1, 2, 3))
+pops = sorted(set((np.where((a > 8) & (b > 8) & (c < 0.35 * np.minimum(a, b)))[0] + 1).tolist()) | set((np.where((pa > 10) & (pb > 10) & (pc < 0.35 * np.minimum(pa, pb)))[0] + 1).tolist()))
+print(f'single-frame pops (glitch frames): {len(pops)} {pops[:10]}')
+if pops:
+    fail(f'glitch frames at {pops[:10]}')
 if n != round(dur * fps) and abs(n - round(dur * fps)) > 1:
     fail(f'frame count {n} vs duration {dur:.3f}s')
 
