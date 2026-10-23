@@ -6,9 +6,20 @@
 сұрайды, үйіндегі өз несібесін көре бастайды.
 
 **Нәтиже:** `output/final.mp4`
-- 2160×3840 (9:16), тұрақты 24 fps, H.264 High, yuv420p;
+- 2160×3840 (9:16), тұрақты 24 fps, 124 с (2976 кадр), H.264 High, yuv420p;
 - AAC stereo 48 kHz, faststart;
-- −16 LUFS, true peak ≤ −1 dBTP.
+- −16.0 LUFS, true peak −1.4 dBTP;
+- 89.9 MB: екі өтімді кодтау, 5.6 Mbit/s, GitHub-тың 100 MB шегіне сыю үшін.
+
+`tools/verify.py` тексерісінің нәтижесі — **PASS**:
+- spec және faststart дұрыс;
+- үнсіз бөлік жоқ, қара кадр жоқ;
+- бір кадрлық глитч жоқ.
+
+Түс секірістерінің бәрі жоспарланған монтаж нүктелерінде: кесулер, флеш, dissolve, перде-wipe және соңғы fade.
+
+Жоғары сапалы мастер (CRF 19, 325 MB) репозиторийге сыймайды.
+Оны `bash tools/render_final.sh` жасайды, ал `bash tools/encode_delivery.sh` одан осы нұсқаны алады.
 
 `output/contact_sheet.jpg` фильмнен әр 2 секунд сайын алынған бір кадрды көрсетеді.
 
@@ -37,12 +48,13 @@
 cd eki-tereze
 npm install                      # three, playwright-core, esbuild
 bash tools/render_final.sh       # 3D қабат (бөліктермен) → мәтін қабаты → дыбыс → композиция → mux
-python3 tools/verify.py          # ffprobe, LUFS/true peak, үнсіздік, қара кадр, кесуден тыс секіріс, contact sheet
+mv output/final.mp4 output/final_master_crf19.mp4 && bash tools/encode_delivery.sh   # ≤100 MB нұсқа
+python3 tools/verify.py          # ffprobe, LUFS/true peak, үнсіздік, қара кадр, глитч кадр, contact sheet
 ```
 
 `render_final.sh` қайта жалғанады. Әр 300 кадрлық бөлік `build/final/scene_NNNN.mp4`
 ретінде сақталады. Үзіліп қалса, сол команданы қайта іске қосыңыз: дайын бөліктер өткізіліп
-жіберіледі. Толық рендер 4 CPU ядрода ≈7–8 сағат алады.
+жіберіледі. Толық рендер 4 CPU ядрода шамамен 6 сағат алды (бір кадр ≈7.5 с).
 
 | Команда | Не істейді |
 | --- | --- |
