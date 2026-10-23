@@ -1,0 +1,247 @@
+[
+ {
+  "id": "arman",
+  "gender": 1.0,
+  "years": 31,
+  "race": {
+   "asian": 0.8,
+   "caucasian": 0.2
+  },
+  "muscle": 0.56,
+  "weight": 0.46,
+  "height": 0.57,
+  "skin": "#b78a6d",
+  "lip": "#a6675c",
+  "brow": "#1a1411",
+  "browThick": 1.05,
+  "blush": 0.08,
+  "stubble": 0.12,
+  "hair": "part",
+  "details": {
+   "head/head-oval": 0.4,
+   "chin/chin-prominent-incr": 0.3,
+   "chin/chin-width-decr": 0.15,
+   "cheek/l-cheek-bones-incr": 0.45,
+   "cheek/r-cheek-bones-incr": 0.45,
+   "nose/nose-scale-vert-incr": 0.2,
+   "nose/nose-hump-incr": 0.15,
+   "eyes/l-eye-height2-decr": 0.15,
+   "eyes/r-eye-height2-decr": 0.15,
+   "mouth/mouth-scale-horiz-decr": 0.1
+  }
+ },
+ {
+  "id": "armanStudent",
+  "gender": 1.0,
+  "years": 20,
+  "race": {
+   "asian": 0.8,
+   "caucasian": 0.2
+  },
+  "muscle": 0.5,
+  "weight": 0.4,
+  "height": 0.675,
+  "skin": "#bb8e70",
+  "lip": "#ab6b5f",
+  "brow": "#1a1411",
+  "browThick": 1.0,
+  "blush": 0.1,
+  "stubble": 0.0,
+  "hair": "curly",
+  "details": {
+   "head/head-oval": 0.4,
+   "chin/chin-prominent-incr": 0.25,
+   "cheek/l-cheek-bones-incr": 0.4,
+   "cheek/r-cheek-bones-incr": 0.4,
+   "nose/nose-scale-vert-incr": 0.2,
+   "eyes/l-eye-height2-decr": 0.15,
+   "eyes/r-eye-height2-decr": 0.15
+  }
+ },
+ {
+  "id": "armanKid",
+  "gender": 1.0,
+  "years": 8,
+  "race": {
+   "asian": 0.8,
+   "caucasian": 0.2
+  },
+  "muscle": 0.5,
+  "weight": 0.45,
+  "height": 0.73,
+  "skin": "#c09272",
+  "lip": "#b8746a",
+  "brow": "#1d1612",
+  "browThick": 0.8,
+  "blush": 0.2,
+  "hair": "kid",
+  "details": {
+   "head/head-oval": 0.3,
+   "cheek/l-cheek-bones-incr": 0.2,
+   "cheek/r-cheek-bones-incr": 0.2
+  }
+ },
+ {
+  "id": "ayan",
+  "gender": 1.0,
+  "years": 31,
+  "race": {
+   "asian": 0.9,
+   "caucasian": 0.1
+  },
+  "muscle": 0.45,
+  "weight": 0.64,
+  "height": 0.555,
+  "skin": "#c09678",
+  "lip": "#aa6d61",
+  "brow": "#231a15",
+  "browThick": 1.25,
+  "blush": 0.1,
+  "stubble": 0.6,
+  "stubbleColor": "#2b2420",
+  "hair": "short",
+  "glasses": true,
+  "details": {
+   "head/head-round": 0.5,
+   "head/head-fat-incr": 0.3,
+   "chin/chin-width-incr": 0.3,
+   "nose/nose-scale-horiz-incr": 0.35,
+   "nose/nose-flaring-incr": 0.3,
+   "nose/nose-point-width-incr": 0.3,
+   "mouth/mouth-scale-horiz-incr": 0.15,
+   "mouth/mouth-lowerlip-volume-incr": 0.3,
+   "cheek/l-cheek-volume-incr": 0.35,
+   "cheek/r-cheek-volume-incr": 0.35
+  }
+ },
+ {
+  "id": "ayanStudent",
+  "gender": 1.0,
+  "years": 20,
+  "race": {
+   "asian": 0.9,
+   "caucasian": 0.1
+  },
+  "muscle": 0.45,
+  "weight": 0.56,
+  "height": 0.652,
+  "skin": "#c39a7b",
+  "lip": "#ad7063",
+  "brow": "#231a15",
+  "browThick": 1.2,
+  "blush": 0.1,
+  "stubble": 0.2,
+  "hair": "short",
+  "glasses": true,
+  "details": {
+   "head/head-round": 0.5,
+   "head/head-fat-incr": 0.2,
+   "nose/nose-scale-horiz-incr": 0.35,
+   "nose/nose-flaring-incr": 0.3,
+   "mouth/mouth-lowerlip-volume-incr": 0.3,
+   "cheek/l-cheek-volume-incr": 0.3,
+   "cheek/r-cheek-volume-incr": 0.3
+  }
+ },
+ {
+  "id": "ayanKid",
+  "gender": 1.0,
+  "years": 8,
+  "race": {
+   "asian": 0.9,
+   "caucasian": 0.1
+  },
+  "muscle": 0.45,
+  "weight": 0.58,
+  "height": 0.67,
+  "skin": "#c59a78",
+  "lip": "#ba766b",
+  "brow": "#231a15",
+  "browThick": 0.9,
+  "blush": 0.22,
+  "hair": "kid",
+  "glasses": true,
+  "details": {
+   "head/head-round": 0.5,
+   "nose/nose-scale-horiz-incr": 0.25,
+   "cheek/l-cheek-volume-incr": 0.3,
+   "cheek/r-cheek-volume-incr": 0.3
+  }
+ },
+ {
+  "id": "wife",
+  "gender": 0.0,
+  "years": 29,
+  "race": {
+   "asian": 0.85,
+   "caucasian": 0.15
+  },
+  "muscle": 0.45,
+  "weight": 0.5,
+  "height": 0.548,
+  "skin": "#c99e82",
+  "lip": "#b06a64",
+  "brow": "#1f1713",
+  "browThick": 0.75,
+  "blush": 0.16,
+  "hair": "scarf",
+  "details": {
+   "head/head-oval": 0.5,
+   "cheek/l-cheek-bones-incr": 0.35,
+   "cheek/r-cheek-bones-incr": 0.35,
+   "mouth/mouth-upperlip-volume-incr": 0.2,
+   "eyes/l-eye-scale-incr": 0.15,
+   "eyes/r-eye-scale-incr": 0.15
+  }
+ },
+ {
+  "id": "son",
+  "gender": 1.0,
+  "years": 7,
+  "race": {
+   "asian": 0.82,
+   "caucasian": 0.18
+  },
+  "muscle": 0.5,
+  "weight": 0.5,
+  "height": 0.755,
+  "skin": "#c29876",
+  "lip": "#b6726b",
+  "brow": "#1b1411",
+  "browThick": 0.7,
+  "blush": 0.24,
+  "hair": "kid",
+  "details": {
+   "head/head-round": 0.35,
+   "cheek/l-cheek-volume-incr": 0.35,
+   "cheek/r-cheek-volume-incr": 0.35,
+   "eyes/l-eye-scale-incr": 0.2,
+   "eyes/r-eye-scale-incr": 0.2
+  }
+ },
+ {
+  "id": "juror",
+  "gender": 1.0,
+  "years": 54,
+  "race": {
+   "asian": 0.85,
+   "caucasian": 0.15
+  },
+  "muscle": 0.4,
+  "weight": 0.7,
+  "height": 0.56,
+  "skin": "#b9937a",
+  "lip": "#9f675c",
+  "brow": "#5f5852",
+  "browThick": 1.3,
+  "blush": 0.1,
+  "stubble": 0.3,
+  "stubbleColor": "#5d5650",
+  "hair": "short",
+  "details": {
+   "head/head-square": 0.4,
+   "nose/nose-scale-vert-incr": 0.3,
+   "chin/chin-width-incr": 0.3
+  }
+ }
+]

@@ -1,0 +1,12 @@
+node_modules/
+# build/ is regenerated; the voice takes are kept because they need the 122 MB TTS model
+build/*
+!build/voice.json
+!build/voice/
+third_party/
+voices/*.onnx
+voices/*.onnx.json
+output/*
+!output/final.mp4
+!output/contact_sheet.jpg
+__pycache__/

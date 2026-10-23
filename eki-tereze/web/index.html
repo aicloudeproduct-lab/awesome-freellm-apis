@@ -1,0 +1,8 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#000;overflow:hidden}
+canvas{display:block;position:absolute;left:0;top:0}
+</style></head><body><script>
+const entry = new URLSearchParams(location.search).get('entry') || 'app';
+const s = document.createElement('script'); s.src = '../build/' + entry + '.js'; document.body.appendChild(s);
+</script></body></html>

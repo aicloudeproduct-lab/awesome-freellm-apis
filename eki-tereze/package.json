@@ -1,0 +1,20 @@
+{
+  "name": "eki-tereze",
+  "private": true,
+  "description": "«Екі терезе» — 3D анимациялық қысқаметражды фильм (Three.js, детерминирленген кадр рендері)",
+  "type": "module",
+  "dependencies": {
+    "three": "0.170.0",
+    "playwright-core": "1.56.1",
+    "esbuild": "0.24.0"
+  },
+  "scripts": {
+    "build": "esbuild src/app.js --bundle --format=iife --outfile=build/app.js --log-level=warning",
+    "chars": "python3 tools/mh/build_chars.py",
+    "voice": "python3 tools/make_voice.py",
+    "score": "python3 tools/make_score.py",
+    "still": "npm run build && node tools/render.mjs --entry app --w 540 --t",
+    "preview": "npm run build && node tools/render.mjs --entry app --w 360 --step 2 --pipe build/preview.mp4 --from 0 --to 2976",
+    "render": "bash tools/render_final.sh"
+  }
+}
