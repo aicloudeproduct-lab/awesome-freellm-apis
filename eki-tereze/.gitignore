@@ -8,5 +8,6 @@ voices/*.onnx
 voices/*.onnx.json
 output/*
 !output/final.mp4
+!output/final_speech.mp4
 !output/contact_sheet.jpg
 __pycache__/

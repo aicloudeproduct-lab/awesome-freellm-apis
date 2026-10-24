@@ -88,11 +88,12 @@ function shotAt(t) {
 }
 
 const LAYER = new URLSearchParams(location.search).get('layer') || 'all'; // all | scene | text
+const NOSUBS = !!new URLSearchParams(location.search).get('nosubs');
 if (LAYER === 'text') { st.renderer.domElement.style.display = 'none'; document.documentElement.style.background = document.body.style.background = 'transparent'; }
 function drawOverlay(t) {
   const ctx = st.ctx; ctx.clearRect(0, 0, st.W, st.H);
   if (LAYER === 'scene') return;
-  drawSubtitles(ctx, cues, t, st.W, st.H);
+  if (!NOSUBS) drawSubtitles(ctx, cues, t, st.W, st.H); // nosubs=1: version with a replaced soundtrack
   drawTitle(ctx, t, 9.5, 13.2, st.W, st.H);
   drawThought(ctx, t, 120.9, DURATION - 0.1, st.W, st.H, THOUGHT);
 }
