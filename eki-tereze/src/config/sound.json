@@ -1,0 +1,53 @@
+{
+  "_doc": "Score sections and foley cues for tools/make_score.py (seconds). Voices come from build/voice.json.",
+  "duration": 124.0,
+  "targetLufs": -16.0,
+  "truePeak": -1.5,
+  "musicDuckDb": -9,
+  "sections": [
+    {"t0": 0.0, "t1": 10.4, "kind": "night"},
+    {"t0": 10.4, "t1": 25.0, "kind": "friendship"},
+    {"t0": 25.0, "t1": 43.0, "kind": "competition"},
+    {"t0": 43.0, "t1": 65.4, "kind": "envy"},
+    {"t0": 65.4, "t1": 83.6, "kind": "home"},
+    {"t0": 83.6, "t1": 86.6, "kind": "fade"},
+    {"t0": 86.6, "t1": 92.6, "kind": "silence"},
+    {"t0": 92.6, "t1": 101.0, "kind": "realize"},
+    {"t0": 101.0, "t1": 114.2, "kind": "forgive"},
+    {"t0": 114.2, "t1": 124.0, "kind": "hope"}
+  ],
+  "ambience": [
+    {"t0": 0.0, "t1": 10.6, "kind": "room_night"},
+    {"t0": 10.6, "t1": 16.0, "kind": "yard"},
+    {"t0": 16.0, "t1": 25.0, "kind": "room_lamp"},
+    {"t0": 25.0, "t1": 39.6, "kind": "hall"},
+    {"t0": 39.6, "t1": 43.0, "kind": "room_day"},
+    {"t0": 43.0, "t1": 46.6, "kind": "hall"},
+    {"t0": 46.6, "t1": 61.0, "kind": "room_day"},
+    {"t0": 61.0, "t1": 83.4, "kind": "room_evening"},
+    {"t0": 83.4, "t1": 101.0, "kind": "room_night"},
+    {"t0": 101.0, "t1": 114.2, "kind": "street_day"},
+    {"t0": 114.2, "t1": 119.0, "kind": "room_day"},
+    {"t0": 119.0, "t1": 124.0, "kind": "street_dusk"}
+  ],
+  "cues": [
+    ["clock", 0.3, 10.4], ["car_pass", 2.4], ["typing", 4.0, 5.4], ["fabric", 9.35, 0.6], ["rise_whoosh", 9.6, 1.1],
+    ["thud_soft", 11.2], ["crumble", 11.72], ["thud_soft", 12.12], ["birds", 10.6, 16.0],
+    ["whoosh_soft", 15.55, 0.9], ["scribble", 16.4, 18.9], ["tap", 17.65], ["clink", 19.62], ["paper", 20.15, 0.6], ["paper", 20.7, 0.4],
+    ["shimmer", 21.2, 3.6], ["paper", 21.0, 0.8],
+    ["steps_hard", 25.0, 26.6, 0.48], ["click", 27.45], ["applause_small", 27.7, 1.6], ["cloth", 31.25, 0.5], ["pat", 31.85], ["pat", 32.15], ["cloth", 36.6, 0.5],
+    ["scribble", 39.8, 42.8], ["birds", 39.6, 43.0],
+    ["applause_big", 43.0, 2.8], ["camera_flash", 43.7], ["camera_flash", 44.3], ["camera_flash", 45.1], ["glass_shimmer", 45.7, 1.1],
+    ["swipe", 47.7], ["swipe", 48.6], ["swipe", 49.5], ["swipe", 50.4],
+    ["buzz", 51.4, 53.2], ["phone_flip", 53.6],
+    ["clock", 55.2, 61.0], ["rain", 56.8, 58.9], ["wind", 58.8, 61.0], ["paper", 56.0, 0.5], ["paper", 58.0, 0.5], ["paper", 60.0, 0.5],
+    ["tv_bed", 61.0, 65.4], ["exhale", 63.6],
+    ["door", 65.35], ["steps_soft", 65.6, 66.6, 0.55], ["chair", 66.45], ["pour", 66.05, 1.4], ["clink", 67.55],
+    ["steps_kid", 70.4, 71.4, 0.3], ["paper", 71.0, 0.5], ["paper", 76.4, 0.6], ["steps_kid", 77.3, 78.6, 0.36], ["clock", 79.0, 83.4],
+    ["curtain", 83.5, 1.9],
+    ["roomtone_only", 86.6, 92.6],
+    ["delete_taps", 96.5, 97.3], ["phone_down", 97.65], ["knee", 98.9], ["cloth", 98.2, 0.8],
+    ["birds", 101.0, 114.2], ["knock", 101.8], ["knock", 102.2], ["knock", 102.6], ["door_open", 103.0], ["cloth", 113.75, 0.5],
+    ["ding", 114.85], ["typing", 115.4, 116.9], ["send", 117.0], ["phone_down", 117.55], ["steps_kid", 117.3, 118.4, 0.33], ["scribble", 118.2, 120.0]
+  ]
+}
