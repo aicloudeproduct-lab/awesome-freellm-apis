@@ -1,0 +1,6 @@
+node_modules/
+frames/
+tests/
+out/
+*.log
+voice_model/*.onnx

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="kk"><head><meta charset="utf-8"><title>Алға қадам жаса</title>
+<style>
+@font-face { font-family: 'Noto Sans'; src: url('../public/fonts/NotoSans.ttf') format('truetype'); font-weight: 100 900; }
+html, body { margin: 0; background: #000; overflow: hidden; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+canvas { display: block; }
+#titles { position: absolute; left: 76px; right: 76px; top: 300px; text-align: center; font-family: 'Noto Sans'; font-weight: 800;
+  font-size: 70px; line-height: 1.18; letter-spacing: 0.02em; color: rgba(236,234,228,0.86); text-shadow: 0 2px 22px rgba(0,0,0,0.5); pointer-events: none; }
+#titles .ln { display: block; will-change: transform, opacity; }
+#titles .kw { display: inline-block; transform-origin: 50% 60%; margin: 0 0.06em; }
+</style>
+<script type="importmap">{"imports": {"three": "../node_modules/three/build/three.module.js", "three/addons/": "../node_modules/three/examples/jsm/"}}</script>
+</head><body><div id="stage"><div id="titles"></div></div>
+<script type="module" src="./main.js"></script></body></html>
