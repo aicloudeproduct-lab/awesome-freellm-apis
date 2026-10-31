@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<title>Claude — 30s</title>
+<style>
+@font-face{font-family:'D';src:url('fonts/InterDisplay-Black.otf');font-weight:900}
+@font-face{font-family:'D';src:url('fonts/InterDisplay-ExtraBold.otf');font-weight:800}
+@font-face{font-family:'T';src:url('fonts/Inter-SemiBold.otf');font-weight:600}
+@font-face{font-family:'T';src:url('fonts/Inter-Medium.otf');font-weight:500}
+html,body{margin:0;background:#000;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:#000}
+canvas{position:absolute;left:0;top:0}
+.ov{position:absolute;inset:0;pointer-events:none}
+.txt{position:absolute;color:#F4EFE7;display:none}
+.txt::before{content:'';position:absolute;inset:-160px -220px;z-index:-1;background:radial-gradient(closest-side,rgba(8,6,5,.55),rgba(8,6,5,.25) 60%,transparent)}
+.line{display:block;overflow:hidden;padding:.02em .06em .06em;margin:0 -.06em}
+.line>span{display:inline-block;will-change:transform}
+.big{font-family:D;font-weight:900;letter-spacing:-.04em;text-transform:uppercase;line-height:.86;
+     text-shadow:0 18px 70px rgba(0,0,0,.45)}
+.label{font-family:T;font-weight:600;font-size:22px;letter-spacing:.42em;text-transform:uppercase;color:#EBA584;
+       display:flex;align-items:center;gap:22px;margin-bottom:26px;white-space:nowrap}
+.label .num{font-family:D;font-weight:900;letter-spacing:0;font-size:24px;color:#F4EFE7}
+.rule{display:inline-block;height:2px;width:96px;background:#D97757;transform-origin:left center}
+.sub{font-family:T;font-weight:500;font-size:31px;letter-spacing:.01em;color:rgba(244,239,231,.84);margin-top:30px;
+     text-shadow:0 4px 24px rgba(0,0,0,.6)}
+.coral{color:#E27B54}
+.right{text-align:right}.right .label{justify-content:flex-end}.right .rule{transform-origin:right center}
+.center{text-align:center}.center .label{justify-content:center}
+.letters span{display:inline-block;will-change:transform,filter}
+.bar{position:absolute;left:0;right:0;height:0;background:#000}
+#barT{top:0}#barB{bottom:0}
+#flash{background:#FFF6EC;opacity:0;mix-blend-mode:screen}
+#leak{opacity:0;mix-blend-mode:screen;
+      background:radial-gradient(circle at 50% 50%,rgba(255,170,110,.95) 0%,rgba(226,123,84,.55) 22%,rgba(140,40,20,.15) 48%,transparent 70%)}
+#fade{background:#000;opacity:0}
+</style>
+<script type="importmap">
+{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}
+</script>
+</head>
+<body>
+<div id="stage">
+  <!-- 0: intro -->
+  <div class="txt center" id="t0" style="left:0;right:0;top:318px">
+    <div class="label"><span class="rule"></span><span class="lt">Жасанды интеллект</span><span class="rule"></span></div>
+    <div class="big letters" id="claude0" style="font-size:330px">CLAUDE</div>
+    <div class="line sub" style="margin-top:34px;font-size:36px"><span>Не істей алады?</span></div>
+  </div>
+  <!-- 1: writing -->
+  <div class="txt" id="t1" style="left:150px;bottom:150px">
+    <div class="label"><span class="num">01</span><span class="rule"></span><span class="lt">Жазу</span></div>
+    <div class="big" style="font-size:168px">
+      <div class="line"><span>Мәтін.</span></div>
+      <div class="line"><span>Идея.</span></div>
+      <div class="line coral"><span>Әңгіме.</span></div>
+    </div>
+    <div class="line sub"><span>Хат, мақала, сценарий — бірнеше секундта</span></div>
+  </div>
+  <!-- 2: code -->
+  <div class="txt right" id="t2" style="right:150px;top:190px">
+    <div class="label"><span class="lt">Бағдарламалау</span><span class="rule"></span><span class="num">02</span></div>
+    <div class="big" style="font-size:215px">
+      <div class="line"><span>Код</span></div>
+      <div class="line coral"><span>жазады</span></div>
+    </div>
+    <div class="line sub"><span>Python · JavaScript · SQL — жазады, тексереді, түзетеді</span></div>
+  </div>
+  <!-- 3: analysis -->
+  <div class="txt" id="t3" style="left:150px;top:190px">
+    <div class="label"><span class="num">03</span><span class="rule"></span><span class="lt">Талдау</span></div>
+    <div class="big" style="font-size:190px">
+      <div class="line"><span>Деректі</span></div>
+      <div class="line coral"><span>талдайды</span></div>
+    </div>
+    <div class="line sub"><span>Кестелер, есептер, ұзын құжаттар — нақты қорытынды</span></div>
+  </div>
+  <!-- 4: vision -->
+  <div class="txt right" id="t4" style="right:150px;bottom:150px">
+    <div class="label"><span class="lt">Көру</span><span class="rule"></span><span class="num">04</span></div>
+    <div class="big" style="font-size:200px">
+      <div class="line"><span>Суретті</span></div>
+      <div class="line coral"><span>көреді</span></div>
+    </div>
+    <div class="line sub"><span>Фото, график, скриншот — түсініп, түсіндіреді</span></div>
+  </div>
+  <!-- 5: finale -->
+  <div class="txt center" id="t5" style="left:0;right:0;top:300px">
+    <div class="label"><span class="rule"></span><span class="lt">Сіздің AI серіктесіңіз</span><span class="rule"></span></div>
+    <div class="big letters" id="claude5" style="font-size:330px">CLAUDE</div>
+    <div class="line" style="font-family:D;font-weight:800;font-size:54px;letter-spacing:-.01em;margin-top:40px;text-transform:uppercase">
+      <span>Ойлайды. Жазады. <b class="coral" style="font-weight:800">Көмектеседі.</b></span></div>
+    <div class="line sub" style="font-size:26px;letter-spacing:.5em;margin-top:26px;color:#EBA584"><span>CLAUDE.AI</span></div>
+  </div>
+
+  <div class="ov" id="leak"></div>
+  <div class="ov" id="flash"></div>
+  <div class="ov" id="fade"></div>
+  <div class="bar" id="barT"></div><div class="bar" id="barB"></div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const W = 1920, H = 1080, FPS = 30, DUR = 30;
+const CUTS = [5, 10, 15, 20, 25];
+
+// ---------- easing ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const sstep = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+const outExpo = k => k >= 1 ? 1 : 1 - Math.pow(2, -10 * k);
+const inExpo = k => k <= 0 ? 0 : Math.pow(2, 10 * k - 10);
+const inOut = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const outCubic = k => 1 - Math.pow(1 - k, 3);
+const inCubic = k => k * k * k;
+const outBack = k => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
+const hash = (i, j) => { const s = Math.sin(i * 127.1 + j * 311.7) * 43758.5453; return s - Math.floor(s); };
+
+// ---------- renderer ----------
+const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.getElementById('stage').prepend(renderer.domElement);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(35, W / H, 0.05, 200);
+
+// ---------- materials ----------
+const M = {
+  clay: () => new THREE.MeshPhysicalMaterial({ color: 0xB9583A, roughness: .34, clearcoat: .9, clearcoatRoughness: .12, sheen: .4, sheenColor: new THREE.Color(0xffc2a6) }),
+  marble: () => new THREE.MeshPhysicalMaterial({ color: 0xEDE4D6, roughness: .28, clearcoat: 1, clearcoatRoughness: .08, side: THREE.DoubleSide }),
+  graphite: () => new THREE.MeshPhysicalMaterial({ color: 0x24211F, roughness: .38, metalness: .55, clearcoat: .6, clearcoatRoughness: .2 }),
+  chrome: () => new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: .1, metalness: 1 }),
+  gold: () => new THREE.MeshPhysicalMaterial({ color: 0xE9B08A, roughness: .18, metalness: 1 }),
+  glow: () => new THREE.MeshStandardMaterial({ color: 0xE07A50, emissive: 0xE8794C, emissiveIntensity: 1.5, roughness: .4 }),
+  black: () => new THREE.MeshPhysicalMaterial({ color: 0x060606, roughness: .22, metalness: .3, clearcoat: 1, clearcoatRoughness: .05 }),
+};
+
+function makeStage({ floorY = -2, bg = 0x0b0a09, envI = .4, key = [5, 9, 5], keyI = 3, rim = [-7, 5, -6], rimI = 400, fog = [14, 46], floorCol = 0x161311 } = {}) {
+  const s = new THREE.Scene();
+  s.background = new THREE.Color(bg);
+  s.environment = envTex;
+  s.environmentIntensity = envI;
+  s.fog = new THREE.Fog(bg, fog[0], fog[1]);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshStandardMaterial({ color: floorCol, roughness: .46 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = floorY; floor.receiveShadow = true; s.add(floor);
+  const k = new THREE.DirectionalLight(0xFFF0DF, keyI);
+  k.position.set(...key); k.castShadow = true;
+  k.shadow.mapSize.set(2048, 2048);
+  Object.assign(k.shadow.camera, { left: -11, right: 11, top: 11, bottom: -11, near: .5, far: 50 });
+  k.shadow.bias = -.0004; k.shadow.normalBias = .03; k.shadow.radius = 5;
+  s.add(k, k.target);
+  const r = new THREE.SpotLight(0xFFAE85, rimI, 60, Math.PI / 5, .7, 1.6);
+  r.position.set(...rim); s.add(r, r.target);
+  return { s, key: k, rim: r, floor };
+}
+
+// =====================================================================
+// SCENE A — intro: glazed ceramic knot
+// =====================================================================
+const A = makeStage({ floorY: -2.15, keyI: 0 });
+const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(1.15, .37, 700, 110, 2, 3), M.clay());
+knot.castShadow = true; knot.receiveShadow = true; knot.position.y = .25; A.s.add(knot);
+const sweep = new THREE.SpotLight(0xFFE7D1, 0, 40, Math.PI / 9, .55, 1.4);
+sweep.castShadow = true; sweep.shadow.mapSize.set(1024, 1024); sweep.target.position.set(0, .2, 0);
+A.s.add(sweep, sweep.target);
+
+function updA(lt) {
+  A.key.intensity = 2.6 * sstep(.6, 2.6, lt);
+  A.rim.intensity = 350 * sstep(0, 1.6, lt);
+  sweep.intensity = 420 * sstep(0, .5, lt) * (1 - .6 * sstep(2.5, 4, lt));
+  sweep.position.set(lerp(-9, 6, inOut(clamp(lt / 3.2))), 6, 6);
+  knot.rotation.set(.25 + .15 * Math.sin(lt * .6), lt * .38 + inExpo(clamp((lt - 4.3) / .7)) * 1.2, .1);
+  const p = clamp(lt / 5);
+  const rush = inExpo(clamp((lt - 4.35) / .65));
+  const ang = -.42 + .55 * inOut(p);
+  const dist = lerp(lerp(10.5, 8.2, inOut(p)), .9, rush);
+  camera.position.set(Math.sin(ang) * dist, lerp(.75, .3, rush), Math.cos(ang) * dist);
+  camera.lookAt(0, .2, 0);
+  camera.rotation.z += .08 * rush;
+}
+
+// =====================================================================
+// SCENE B — writing: flowing marble ribbons
+// =====================================================================
+const B = makeStage({ floorY: -2.5, envI: .5, keyI: 2.6, key: [-4, 9, 6], rim: [7, 4, -6], rimI: 600 });
+const NU = 420, NV = 26;
+const ribbons = [];
+const ribMats = [M.marble(), M.clay(), M.graphite()];
+ribMats[1].side = ribMats[2].side = THREE.DoubleSide;
+for (let k = 0; k < 3; k++) {
+  const g = new THREE.BufferGeometry();
+  const pos = new Float32Array(NU * NV * 3);
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const idx = [];
+  for (let i = 0; i < NU - 1; i++) for (let j = 0; j < NV - 1; j++) {
+    const a = i * NV + j, b = a + 1, c = a + NV, d = c + 1;
+    idx.push(a, c, b, b, c, d);
+  }
+  g.setIndex(idx);
+  const m = new THREE.Mesh(g, ribMats[k]);
+  m.castShadow = true; m.receiveShadow = true; m.frustumCulled = false;
+  B.s.add(m); ribbons.push(m);
+}
+function ribbonPoint(k, u, t, out) {
+  const ph = k * 2.1;
+  out.x = (u - .5) * 16;
+  out.y = .25 + Math.sin(u * 3.3 + t * .9 + ph) * .85 + Math.sin(u * 7.1 - t * .5 + ph) * .18 + (k - 1) * .25;
+  out.z = Math.cos(u * 2.2 + t * .65 + ph * 1.3) * 1.3 - k * .35;
+}
+const _p = { x: 0, y: 0, z: 0 }, _q = { x: 0, y: 0, z: 0 };
+function updRibbons(t) {
+  for (let k = 0; k < 3; k++) {
+    const arr = ribbons[k].geometry.attributes.position.array;
+    const width = [.62, .48, .36][k];
+    for (let i = 0; i < NU; i++) {
+      const u = i / (NU - 1);
+      ribbonPoint(k, u, t, _p); ribbonPoint(k, u + .002, t, _q);
+      // tangent
+      let tx = _q.x - _p.x, ty = _q.y - _p.y, tz = _q.z - _p.z;
+      const tl = Math.hypot(tx, ty, tz); tx /= tl; ty /= tl; tz /= tl;
+      // reference "up" twisted around tangent
+      const a = u * 5.5 + t * .8 + k * 1.4;
+      let ux = 0, uy = Math.cos(a), uz = Math.sin(a);
+      // orthogonalise
+      const dd = ux * tx + uy * ty + uz * tz; ux -= dd * tx; uy -= dd * ty; uz -= dd * tz;
+      const ul = Math.hypot(ux, uy, uz); ux /= ul; uy /= ul; uz /= ul;
+      const taper = Math.sin(Math.PI * clamp(u * 1.0)) ** .35;
+      for (let j = 0; j < NV; j++) {
+        const v = (j / (NV - 1) - .5) * 2 * width * taper;
+        const bulge = .05 * (1 - (j / (NV - 1) * 2 - 1) ** 2);
+        const o = (i * NV + j) * 3;
+        // small thickness illusion via bulge along binormal
+        const bx = ty * uz - tz * uy, by = tz * ux - tx * uz, bz = tx * uy - ty * ux;
+        arr[o] = _p.x + ux * v + bx * bulge;
+        arr[o + 1] = _p.y + uy * v + by * bulge;
+        arr[o + 2] = _p.z + uz * v + bz * bulge;
+      }
+    }
+    ribbons[k].geometry.attributes.position.needsUpdate = true;
+    ribbons[k].geometry.computeVertexNormals();
+  }
+}
+// wipe slab (attached to camera)
+const slab = new THREE.Mesh(new RoundedBoxGeometry(1.7, 1.3, .12, 4, .04), M.black());
+slab.position.set(-2, 0, -1.0); slab.rotation.z = .04;
+camera.add(slab);
+const slabLight = new THREE.PointLight(0xFFD2B5, 0, 4, 2); slabLight.position.set(.6, .5, -.3); camera.add(slabLight);
+
+function updB(lt, t) {
+  updRibbons(t * .9);
+  const emerge = outExpo(clamp(lt / 1.1));
+  const dist = lerp(2.2, 8.6, emerge) - .9 * inOut(clamp(lt / 5));
+  const x = lerp(-1.6, 1.3, inOut(clamp(lt / 5)));
+  camera.position.set(x, lerp(.2, 1.15, emerge), dist);
+  camera.lookAt(x * .55 + .6, .15, 0);
+  camera.rotation.z += -.06 * (1 - emerge);
+  slab.position.x = lerp(-1.75, 0, inCubic(clamp((lt - 4.5) / .5)));
+}
+
+// =====================================================================
+// SCENE C — code: graphite block city with glowing cells
+// =====================================================================
+const C = makeStage({ floorY: 0, envI: .45, keyI: 2.8, key: [6, 12, 3], rim: [-8, 6, -8], rimI: 900, fog: [12, 40] });
+const GN = 26, GS = .46;
+const boxG = new RoundedBoxGeometry(.4, 1, .4, 2, .05); boxG.translate(0, .5, 0);
+const cells = [], lit = [];
+for (let i = 0; i < GN; i++) for (let j = 0; j < GN; j++) {
+  const c = { i, j, x: (i - GN / 2 + .5) * GS, z: (j - GN / 2 + .5) * GS, h: hash(i, j) };
+  c.r = Math.hypot(c.x, c.z);
+  (c.h > .925 ? lit : cells).push(c);
+}
+const imDark = new THREE.InstancedMesh(boxG, M.graphite(), cells.length);
+const imLit = new THREE.InstancedMesh(boxG, M.glow(), lit.length);
+imDark.castShadow = imDark.receiveShadow = true; imLit.castShadow = true;
+C.s.add(imDark, imLit);
+const _m = new THREE.Matrix4(), _s = new THREE.Vector3(), _v = new THREE.Vector3(), _qq = new THREE.Quaternion();
+function cellH(c, lt) {
+  const grow = outCubic(clamp((lt + .6 - c.r * .17) / 1.1));
+  const wave = Math.pow(.5 + .5 * Math.sin(c.r * 1.05 - lt * 2.3 + c.h * 1.5), 2);
+  return Math.max(.02, (.12 + 1.75 * wave + c.h * .5) * grow);
+}
+function updC(lt) {
+  cells.forEach((c, n) => { _s.set(1, cellH(c, lt), 1); _v.set(c.x, 0, c.z); _m.compose(_v, _qq, _s); imDark.setMatrixAt(n, _m); });
+  lit.forEach((c, n) => { _s.set(1, cellH(c, lt) + .35, 1); _v.set(c.x, 0, c.z); _m.compose(_v, _qq, _s); imLit.setMatrixAt(n, _m); });
+  imDark.instanceMatrix.needsUpdate = imLit.instanceMatrix.needsUpdate = true;
+  imLit.material.emissiveIntensity = 1.3 + .45 * Math.sin(lt * 3);
+  const p = inOut(clamp(lt / 5));
+  const out = inExpo(clamp((lt - 4.4) / .6));
+  const ang = .7 + .55 * p + 1.4 * out;
+  const el = lerp(1.18, .5, p) + .6 * out;
+  const dist = lerp(13.5, 9.2, p) + 3 * out;
+  camera.position.set(Math.sin(ang) * Math.cos(el) * dist, Math.sin(el) * dist, Math.cos(ang) * Math.cos(el) * dist);
+  camera.lookAt(0, .5, 0);
+  slab.position.x = lerp(0, 1.75, outCubic(clamp(lt / .5)));
+}
+
+// =====================================================================
+// SCENE D — analysis: chrome data columns around a ceramic orb
+// =====================================================================
+const D = makeStage({ floorY: 0, envI: .9, keyI: 2.4, key: [-5, 10, 6], rim: [6, 5, -7], rimI: 900, fog: [13, 42] });
+const plinth = new THREE.Mesh(new THREE.CylinderGeometry(4.4, 4.5, .12, 128), M.black());
+plinth.position.y = .06; plinth.receiveShadow = true; D.s.add(plinth);
+const colG = new THREE.CylinderGeometry(1, 1, 1, 40); colG.translate(0, .5, 0);
+const cols = [];
+[[2.5, 44, .1], [3.6, 64, .085]].forEach(([R, N, rad], ring) => {
+  for (let n = 0; n < N; n++) {
+    const a = n / N * Math.PI * 2;
+    const h = .35 + 2.4 * Math.pow((.5 + .5 * Math.sin(a * 3 + ring)) * (.6 + .4 * Math.cos(a * 5 + 1)), 1.3) + hash(n, ring) * .35;
+    cols.push({ a, R, rad, h, d: n / N + ring * .25 });
+  }
+});
+const imCol = new THREE.InstancedMesh(colG, M.chrome(), cols.length);
+imCol.castShadow = imCol.receiveShadow = true; D.s.add(imCol);
+const orb = new THREE.Mesh(new THREE.SphereGeometry(.85, 128, 96), M.clay());
+orb.castShadow = true; D.s.add(orb);
+function updD(lt) {
+  cols.forEach((c, n) => {
+    const g = clamp(outBack(clamp((lt - .1 - c.d * 1.1) / .9)), 0, 1.2);
+    const h = Math.max(.01, c.h * g * (1 + .08 * Math.sin(lt * 2 + c.a * 4)));
+    _s.set(c.rad, h, c.rad); _v.set(Math.cos(c.a) * c.R, .12, Math.sin(c.a) * c.R); _m.compose(_v, _qq, _s); imCol.setMatrixAt(n, _m);
+  });
+  imCol.instanceMatrix.needsUpdate = true;
+  orb.position.set(0, 1.55 + .12 * Math.sin(lt * 1.4), 0);
+  orb.rotation.y = lt * .4;
+  const p = inOut(clamp(lt / 5));
+  const emerge = 1 - outExpo(clamp(lt / .8));
+  const rush = inExpo(clamp((lt - 4.35) / .65));
+  const ang = 1.9 + .9 * p - 1.1 * emerge;
+  const dist = lerp(lerp(10.5, 8.4, p), 1.4, rush);
+  const y = lerp(lerp(1.3, 2.6, p), 1.55, rush);
+  camera.position.set(Math.cos(ang) * dist, y, Math.sin(ang) * dist);
+  camera.lookAt(0, lerp(1.25, 1.55, rush), 0);
+}
+
+// =====================================================================
+// SCENE E — vision: glass eye with gyroscopic rings
+// =====================================================================
+const E = makeStage({ floorY: -2.2, envI: .8, keyI: 2.2, key: [5, 9, 5], rim: [-6, 4, -6], rimI: 900 });
+const eye = new THREE.Mesh(new THREE.SphereGeometry(1.1, 128, 96), new THREE.MeshPhysicalMaterial({
+  color: 0xffffff, transmission: 1, thickness: 1.6, roughness: .04, ior: 1.5, clearcoat: 1,
+  attenuationColor: new THREE.Color(0xFFD6BF), attenuationDistance: 2.5 }));
+eye.position.y = .4; E.s.add(eye);
+const pupil = new THREE.Mesh(new THREE.SphereGeometry(.36, 64, 48), M.glow()); pupil.position.copy(eye.position); E.s.add(pupil);
+const rings = [];
+[[1.65, .045], [2.05, .035], [2.5, .05]].forEach(([R, r], i) => {
+  const m = new THREE.Mesh(new THREE.TorusGeometry(R, r, 32, 256), i === 1 ? M.chrome() : M.gold());
+  m.castShadow = true; m.position.copy(eye.position); E.s.add(m); rings.push(m);
+});
+function updE(lt) {
+  pupil.material.emissiveIntensity = 1.8 + .5 * Math.sin(lt * 2.4);
+  const blast = inExpo(clamp((lt - 4.2) / .8));
+  rings.forEach((m, i) => {
+    const s = 1 + blast * (5 + i * 2.5);
+    m.scale.setScalar(s);
+    m.rotation.set(lt * (.5 + i * .23) + i, lt * (.3 - i * .17) + i * 2, lt * .2 * i);
+  });
+  const emerge = outExpo(clamp(lt / 2.2));
+  const p = inOut(clamp(lt / 5));
+  const ang = .3 - .6 * p;
+  const dist = lerp(2.2, 8.4, emerge) - .8 * p;
+  camera.position.set(Math.sin(ang) * dist, lerp(.45, 1.2, emerge), Math.cos(ang) * dist);
+  camera.lookAt(-1.2 * emerge, .35, 0);
+}
+
+// =====================================================================
+// SCENE F — finale: knot + orbiting capability objects
+// =====================================================================
+const F = makeStage({ floorY: -2.15, envI: .5, keyI: 2.0, key: [4, 9, 6], rim: [-6, 5, -7], rimI: 600 });
+const knot2 = new THREE.Mesh(knot.geometry, M.clay()); knot2.castShadow = true; knot2.position.y = -.35; knot2.scale.setScalar(.8); F.s.add(knot2);
+const sats = [
+  new THREE.Mesh(new RoundedBoxGeometry(.55, .55, .55, 4, .08), M.graphite()),
+  new THREE.Mesh(new THREE.SphereGeometry(.32, 64, 48), M.chrome()),
+  new THREE.Mesh(new THREE.TorusGeometry(.3, .1, 32, 96), M.gold()),
+  new THREE.Mesh(new THREE.IcosahedronGeometry(.36, 0), M.marble()),
+  new THREE.Mesh(new THREE.CylinderGeometry(.2, .2, .7, 48), M.chrome()),
+  new THREE.Mesh(new THREE.SphereGeometry(.18, 48, 32), M.glow()),
+];
+sats.forEach(m => { m.castShadow = true; F.s.add(m); });
+function updF(lt) {
+  knot2.rotation.set(.25 + .15 * Math.sin(lt * .6), 2 + lt * .45, .1);
+  sats.forEach((m, i) => {
+    const a = i / sats.length * Math.PI * 2 + lt * .55;
+    const R = 3.1 + .3 * Math.sin(i * 2.3);
+    m.position.set(Math.cos(a) * R, .3 + Math.sin(a * 2 + i) * .55, Math.sin(a) * R);
+    m.rotation.set(lt * .8 + i, lt * .6 + i * 2, 0);
+  });
+  const emerge = outExpo(clamp(lt / 1.2));
+  const p = inOut(clamp(lt / 5));
+  const ang = .5 - .5 * p - .6 * (1 - emerge);
+  const dist = lerp(2.6, 11.5, emerge) - 1.2 * p;
+  camera.position.set(Math.sin(ang) * dist, lerp(.4, .9, emerge), Math.cos(ang) * dist);
+  camera.lookAt(0, .2, 0);
+}
+
+const SCENES = [
+  { st: A, up: updA, off: 0 },
+  { st: B, up: updB, off: 0 },
+  { st: C, up: updC, off: -300 },
+  { st: D, up: updD, off: -330 },
+  { st: E, up: updE, off: 0 },
+  { st: F, up: updF, off: 0 },
+];
+
+// ---------- post ----------
+const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
+const composer = new EffectComposer(renderer, rt);
+const rpass = new RenderPass(A.s, camera);
+composer.addPass(rpass);
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), .24, .5, .93);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+const fx = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, uBlur: { value: 0 }, uAberr: { value: 0 }, uTime: { value: 0 }, uGrain: { value: .045 }, uVig: { value: .85 } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
+  fragmentShader: `
+    uniform sampler2D tDiffuse; uniform float uBlur,uAberr,uTime,uGrain,uVig; varying vec2 vUv;
+    float h(vec2 p){ return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453); }
+    void main(){
+      vec2 c=vec2(.5), d=vUv-c;
+      float ab=(.0012+uAberr*.012)*length(d)*2.;
+      vec3 col=vec3(0.);
+      const int S=18;
+      float jit=h(vUv*1000.+uTime);
+      for(int i=0;i<S;i++){
+        float k=(float(i)+jit)/float(S);
+        float sc=1.-uBlur*.16*k;
+        col.r+=texture2D(tDiffuse,c+d*(sc+ab)).r;
+        col.g+=texture2D(tDiffuse,c+d*sc).g;
+        col.b+=texture2D(tDiffuse,c+d*(sc-ab)).b;
+      }
+      col/=float(S);
+      float v=smoothstep(1.0,.28,length(d*vec2(1.,.9)));
+      col*=mix(1.,v,uVig);
+      col+= (h(vUv*vec2(1920.,1080.)+fract(uTime*.6180339)*91.7)-.5)*uGrain;
+      gl_FragColor=vec4(col,1.);
+    }`
+});
+composer.addPass(fx);
+
+// ---------- text ----------
+const $ = id => document.getElementById(id);
+function splitLetters(el) { el.innerHTML = [...el.textContent].map(c => `<span>${c}</span>`).join(''); return [...el.children]; }
+const L0 = splitLetters($('claude0')), L5 = splitLetters($('claude5'));
+const TX = [0, 1, 2, 3, 4, 5].map(i => {
+  const el = $('t' + i);
+  return { el, lines: [...el.querySelectorAll('.line>span')], rules: [...el.querySelectorAll('.rule')], lt: [...el.querySelectorAll('.label .lt, .label .num')] };
+});
+const TT = [ // [start, in, out] (absolute seconds)
+  { s: 0, in: .8, out: 4.05 }, { s: 5, in: 5.35, out: 9.2 }, { s: 10, in: 10.45, out: 14.2 },
+  { s: 15, in: 15.4, out: 19.2 }, { s: 20, in: 21.0, out: 24.25 }, { s: 25, in: 25.6, out: 99 },
+];
+function animText(t) {
+  TX.forEach((x, i) => {
+    const tt = TT[i];
+    const vis = t >= tt.in - .05 && t <= tt.out + 1.2;
+    x.el.style.display = vis ? 'block' : 'none';
+    if (!vis) return;
+    x.rules.forEach(r => {
+      const a = outExpo(clamp((t - tt.in) / 1.0)), b = inCubic(clamp((t - tt.out) / .4));
+      r.style.transform = `scaleX(${a * (1 - b)})`;
+    });
+    x.lt.forEach((s, k) => {
+      const a = outExpo(clamp((t - tt.in - .15 - k * .08) / .9)), b = inCubic(clamp((t - tt.out) / .35));
+      s.style.opacity = a * (1 - b);
+      s.style.transform = `translate3d(${(1 - a) * 30}px,0,0)`;
+      s.style.display = 'inline-block';
+    });
+    const lettered = (i === 0 || i === 5);
+    const base = lettered ? 1.25 : .25;
+    x.lines.forEach((s, k) => {
+      const a = outExpo(clamp((t - tt.in - base - k * .13) / 1.0));
+      const b = inCubic(clamp((t - tt.out - k * .06) / .45));
+      s.style.transform = `translate3d(0,${(1 - a) * 118 - b * 118}%,0)`;
+    });
+    if (lettered) {
+      const Ls = i === 0 ? L0 : L5;
+      Ls.forEach((s, k) => {
+        const a = outExpo(clamp((t - tt.in - .2 - k * .075) / 1.3));
+        const b = inCubic(clamp((t - tt.out - k * .035) / .55));
+        const sc = 1.55 - .55 * a + b * .5;
+        s.style.transform = `translate3d(${b * (k - 2.5) * 60}px,${(1 - a) * 50}px,0) scale(${sc})`;
+        s.style.filter = `blur(${((1 - a) * 28 + b * 30).toFixed(2)}px)`;
+        s.style.opacity = (a * (1 - b)).toFixed(3);
+      });
+    }
+  });
+}
+
+// ---------- transitions ----------
+function pulse(t, c, pre, post) { const d = t - c; return d < 0 ? Math.exp(-((d / pre) ** 2)) : Math.exp(-d / post); }
+const TR = [ // cut, blur, flash, leak
+  [5, 1, .85, .35], [10, .25, 0, 0], [15, .9, .55, .2], [20, 1, .25, .8], [25, 1, 1, .5],
+];
+function animTransitions(t) {
+  let blur = 0, flash = 0, leak = 0;
+  TR.forEach(([c, b, f, l]) => {
+    blur += b * pulse(t, c, .28, .22);
+    flash += f * pulse(t, c, .07, .2);
+    leak += l * pulse(t, c, .45, .55);
+  });
+  // opening shimmer + title hit
+  leak += .25 * pulse(t, 1.55, .3, .9);
+  fx.uniforms.uBlur.value = Math.min(1.2, blur);
+  fx.uniforms.uAberr.value = Math.min(1, blur);
+  $('flash').style.opacity = Math.min(1, flash).toFixed(3);
+  const lk = $('leak');
+  lk.style.opacity = Math.min(1, leak).toFixed(3);
+  lk.style.transform = `translate(${Math.sin(t * .9) * 400}px,${Math.cos(t * .7) * 140}px) scale(${1.4 + .3 * Math.sin(t)})`;
+  const bar = 92 * outCubic(clamp(t / 1.4));
+  $('barT').style.height = $('barB').style.height = bar + 'px';
+  $('fade').style.opacity = (1 - sstep(0, .6, t) + sstep(29.0, 29.95, t)).toFixed(3);
+}
+
+// ---------- frame ----------
+function sceneIndex(t) { let i = 0; CUTS.forEach(c => { if (t >= c) i++; }); return i; }
+window.__render = (frame) => {
+  const t = frame / FPS;
+  const i = sceneIndex(t);
+  const sc = SCENES[i];
+  const lt = t - (i === 0 ? 0 : CUTS[i - 1]);
+  sc.st.s.add(camera);
+  camera.rotation.set(0, 0, 0);
+  sc.up(lt, t);
+  if (sc.off) camera.setViewOffset(W, H, sc.off, 0, W, H); else camera.clearViewOffset();
+  slab.visible = (i === 1 || i === 2);
+  slabLight.intensity = slab.visible ? 3 : 0;
+  rpass.scene = sc.st.s;
+  fx.uniforms.uTime.value = frame;
+  animTransitions(t);
+  animText(t);
+  composer.render();
+  return t;
+};
+await document.fonts.load('900 100px D'); await document.fonts.load('800 100px D');
+await document.fonts.load('600 20px T'); await document.fonts.load('500 20px T');
+await document.fonts.ready;
+// warm-up: compile every scene once
+for (const f of [10, 200, 350, 500, 650, 800]) window.__render(f);
+window.__ready = true;
+if (!location.search.includes('capture')) {
+  const t0 = performance.now();
+  const loop = () => { window.__render(Math.floor(((performance.now() - t0) / 1000 * FPS) % (DUR * FPS))); requestAnimationFrame(loop); };
+  loop();
+}
+</script>
+</body>
+</html>
